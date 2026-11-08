@@ -205,7 +205,7 @@ input:focus,select:focus{outline:2px solid #7EC8E3;border-color:#1B3A6B;backgrou
 .btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.3)}
 
 .table-wrap{overflow-x:auto;border-radius:10px;border:1px solid #e6ebf4;-webkit-overflow-scrolling:touch}
-#adminTable{width:100%;border-collapse:collapse;font-size:13.5px;min-width:780px}
+#adminTable{width:100%;border-collapse:collapse;font-size:13.5px;min-width:820px}
 #adminTable th{
   background:#f1f4fa;text-align:left;padding:9px 10px;font-size:12px;color:#6b7488;
   border-bottom:2px solid #e3e8f0;white-space:nowrap;font-weight:700;
@@ -220,6 +220,11 @@ input:focus,select:focus{outline:2px solid #7EC8E3;border-color:#1B3A6B;backgrou
 #adminTable .stack-remain-cell .sr-main{color:#1B3A6B}
 #adminTable .stack-remain-cell .sr-loose{color:#c26a00;font-size:12.5px}
 #adminTable .stack-remain-cell .sr-out{color:#E63946;font-weight:800}
+
+.stack-edit-table{width:100%;border-collapse:collapse;font-size:13px;min-width:560px}
+.stack-edit-table th{background:#f1f4fa;padding:8px 10px;font-size:12px;color:#6b7488;border-bottom:2px solid #e3e8f0;text-align:left;font-weight:700;white-space:nowrap}
+.stack-edit-table td{padding:7px 10px;border-bottom:1px solid #eef1f7;vertical-align:middle}
+.stack-edit-table input[type=number]{width:90px;padding:6px 9px;font-size:13.5px}
 
 .swatch{
   display:inline-block;width:22px;height:22px;border-radius:7px;
@@ -252,76 +257,69 @@ input:focus,select:focus{outline:2px solid #7EC8E3;border-color:#1B3A6B;backgrou
 .channel-page .card h2{color:var(--theme);border-left-color:var(--theme)}
 .channel-page .btn.primary{background:var(--theme);color:#fff}
 .channel-page .btn.primary:hover{filter:brightness(1.1)}
-.channel-page input:focus{outline-color:var(--theme);border-color:var(--theme)}
+.channel-page input:focus,.channel-page select:focus{outline-color:var(--theme);border-color:var(--theme)}
 .channel-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:16px}
 .span-full{grid-column:1/-1}
 
-.current-color-box{
-  border-radius:16px;min-height:150px;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:6px;text-align:center;padding:20px;
-  font-size:clamp(34px,7vw,68px);font-weight:900;letter-spacing:5px;
-  background:#f0f3f9;color:#8a93a6;border:2px dashed #ccd4e2;transition:.25s;
-  user-select:none;
-}
-.current-color-box.empty{background:#f0f3f9;color:#8a93a6;border:2px dashed #ccd4e2}
-.current-color-box.sold-out{border-color:#E63946 !important;border-style:solid !important;position:relative}
-.current-color-box.sold-out::after{
-  content:"沽清";
-  position:absolute;top:12px;right:14px;
-  background:#E63946;color:#fff;font-size:12px;font-weight:800;letter-spacing:1px;
-  padding:3px 10px;border-radius:999px;
-}
 .current-meta{
   display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
-  margin-top:14px;font-size:13.5px;color:#6b7488;font-weight:600;
+  font-size:13.5px;color:#6b7488;font-weight:600;
   align-items:center;
 }
 .current-meta b{color:var(--theme);font-size:17px;font-variant-numeric:tabular-nums}
-.current-meta .sr-soldout{color:#E63946}
-
 .current-meta .meta-sold{
   display:inline-flex;align-items:center;gap:8px;
-  background:#fff4e6;
-  border:1px solid #FF9F1C;
-  border-radius:10px;
-  padding:6px 14px;
-  color:#8a5a00;
-  font-weight:700;
-  font-size:13px;
+  background:#fff4e6;border:1px solid #FF9F1C;border-radius:10px;
+  padding:6px 14px;color:#8a5a00;font-weight:700;font-size:13px;
 }
-.current-meta .meta-sold b{
-  color:#c26a00;
-  font-size:22px;
-  line-height:1;
+.current-meta .meta-sold b{color:#c26a00;font-size:22px;line-height:1}
+
+.active-stacks-display{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin-top:12px}
+.active-stack-card{
+  border-radius:14px;padding:14px 12px;position:relative;display:flex;flex-direction:column;gap:3px;
+  font-weight:800;min-height:112px;justify-content:center;align-items:center;text-align:center;
+  box-shadow:0 4px 14px rgba(0,0,0,.12);border:1px solid rgba(0,0,0,.08);
+}
+.active-stack-card .asc-name{font-size:24px;letter-spacing:2px;line-height:1.1}
+.active-stack-card .asc-stack{font-size:12px;opacity:.85;font-weight:600}
+.active-stack-card .asc-remain{font-size:14px;font-weight:800}
+.active-stack-card .asc-remove{
+  position:absolute;top:6px;right:8px;background:rgba(0,0,0,.22);color:#fff;border:none;
+  border-radius:50%;width:22px;height:22px;font-size:12px;line-height:1;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
+.active-stack-card .asc-remove:hover{background:rgba(0,0,0,.45)}
+.active-stack-card.sold-out{outline:3px solid #E63946;outline-offset:-3px}
+.active-stack-card.sold-out::after{
+  content:'沽清';position:absolute;bottom:6px;left:50%;transform:translateX(-50%);
+  background:#E63946;color:#fff;font-size:10px;font-weight:800;letter-spacing:1px;
+  padding:1px 9px;border-radius:999px;
 }
 
-.sell-controls{
-  display:flex;gap:10px;margin-top:16px;
-}
+.sell-controls{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.sell-controls .sell-target{flex:2 1 160px}
+.sell-controls .sell-qty{flex:0 0 90px}
 .sell-btn{
   flex:1;padding:14px;font-size:16px;font-weight:800;border-radius:10px;border:none;
-  background:#2e9e6b;color:#fff;transition:.15s;
+  background:#2e9e6b;color:#fff;transition:.15s;min-width:110px;
 }
 .sell-btn:hover{background:#25825a}
 .sell-btn:active{transform:scale(0.98)}
-.sell-btn.sold-out{
-  background:#9aa3b5 !important;
-  cursor:not-allowed;
-}
+.sell-btn.sold-out{background:#9aa3b5 !important;cursor:not-allowed}
 .sell-btn.sold-out:hover{background:#9aa3b5 !important}
 .undo-btn{
   flex:1;padding:14px;font-size:16px;font-weight:800;border-radius:10px;border:none;
-  background:#E63946;color:#fff;transition:.15s;
+  background:#E63946;color:#fff;transition:.15s;min-width:110px;
 }
 .undo-btn:hover{background:#cf2b38}
 .undo-btn:active{transform:scale(0.98)}
 .schedule-info{
-  font-size:13px;color:#6b7488;font-weight:600;margin-top:8px;
+  font-size:13px;color:#6b7488;font-weight:600;margin-top:4px;
   background:#f6f8fc;padding:8px 12px;border-radius:8px;
   display:inline-block;
 }
 
-.color-picker{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.color-picker{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;margin-top:6px}
 .color-pick{
   display:flex;flex-direction:column;align-items:center;gap:5px;
   border:2px solid #e3e8f0;border-radius:12px;padding:9px 6px;background:#fbfcfe;
@@ -331,9 +329,7 @@ input:focus,select:focus{outline:2px solid #7EC8E3;border-color:#1B3A6B;backgrou
 .color-pick.active{border-color:var(--theme);background:#eef4ff;box-shadow:0 0 0 2px rgba(27,58,107,.15)}
 .color-pick:disabled{opacity:.35;cursor:not-allowed;filter:grayscale(.35)}
 .color-pick .cp-tag{font-size:10.5px;font-weight:600;color:#8a93a6}
-.color-pick.sold-out-current{border-color:#E63946;background:#fff0f1}
-.color-pick.sold-out-current:disabled{opacity:1;filter:none}
-.color-pick.sold-out-current .cp-tag{color:#E63946;font-weight:800}
+.color-pick.used-color{border-style:dashed}
 
 .used-grid{display:flex;flex-wrap:wrap;gap:8px}
 .used-chip{
@@ -353,38 +349,25 @@ body.board-mode main{padding:0;overflow:hidden;max-width:none}
   min-height:calc(100vh - 44px);display:flex;flex-direction:column;gap:12px;
   overflow:hidden;
 }
-
 .board-header{
-  display:grid;
-  grid-template-columns:1fr auto 1fr;
-  align-items:center;
-  gap:12px;
-  padding-bottom:12px;
-  border-bottom:1px solid rgba(255,255,255,.08);
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;
+  padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.08);
 }
 .board-header-left{display:flex;align-items:center}
 .board-header-center{text-align:center}
 .board-header-right{text-align:right}
-
 .board-session{font-size:20px;font-weight:800;letter-spacing:1px}
 .board-schedule{font-size:14px;color:#FFD93D;margin-top:4px;font-weight:600;}
 .board-password{font-size:18px;color:#FFD93D;margin-top:6px;font-weight:800;letter-spacing:1px;}
 .board-clock{font-size:14px;color:#9fb2cf;font-variant-numeric:tabular-nums;margin-top:2px}
-
 .board-stat{
   display:flex;align-items:baseline;gap:10px;
-  background:rgba(255,159,28,.12);
-  border:1px solid rgba(255,159,28,.35);
-  border-radius:10px;
-  padding:8px 14px;
+  background:rgba(255,159,28,.12);border:1px solid rgba(255,159,28,.35);
+  border-radius:10px;padding:8px 14px;
 }
 .board-stat-label{font-size:12px;color:#FFD93D;letter-spacing:.5px}
-.board-stat-value{
-  font-size:26px;font-weight:900;color:#FFD93D;
-  font-variant-numeric:tabular-nums;line-height:1;
-}
+.board-stat-value{font-size:26px;font-weight:900;color:#FFD93D;font-variant-numeric:tabular-nums;line-height:1}
 .board-stat-unit{font-size:12px;color:#c7d4ea;opacity:.85}
-
 .board-fs{
   background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);
   color:#fff;border-radius:10px;padding:8px 16px;cursor:pointer;
@@ -395,21 +378,23 @@ body.board-mode main{padding:0;overflow:hidden;max-width:none}
 .board-channels{display:grid;grid-template-columns:1fr 1fr;gap:16px;flex:1 1 auto;min-height:0}
 .board-channel{display:flex;flex-direction:column;gap:8px;min-height:0}
 .board-channel-title{font-size:15px;font-weight:700;color:#c7d4ea;letter-spacing:1px}
+.board-stack-grid{display:grid;gap:10px;flex:1;min-height:0}
+.board-channel[data-ch="cash"] .board-stack-grid{grid-template-columns:1fr}
+.board-channel[data-ch="epay"] .board-stack-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
 .board-color-box{
-  flex:1;border-radius:16px;display:flex;align-items:center;justify-content:center;
+  border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;
   text-align:center;border:2px solid rgba(255,255,255,.15);transition:.3s;
-  font-size:clamp(30px,6.5vw,110px);font-weight:900;letter-spacing:6px;padding:10px;
-  position:relative;
+  font-size:clamp(26px,4.2vw,70px);font-weight:900;letter-spacing:5px;padding:10px;
+  position:relative;min-height:120px;
 }
-.board-color-box.empty{background:#22304a;color:#9fb2cf;font-size:26px;letter-spacing:2px;border-color:rgba(255,255,255,.12)}
+.board-color-box .bcs-stack{font-size:13px;letter-spacing:1px;font-weight:700;opacity:.85;margin-top:6px}
+.board-color-box.empty{background:#22304a;color:#9fb2cf;font-size:22px;letter-spacing:2px;border-color:rgba(255,255,255,.12)}
 .board-color-box.sold-out{border-color:#E63946 !important;box-shadow:0 0 0 3px rgba(230,57,70,.35) inset}
 .board-color-box.sold-out::after{
-  content:"沽清";
-  position:absolute;top:12px;right:14px;
-  background:#E63946;color:#fff;font-size:13px;font-weight:800;letter-spacing:2px;
-  padding:4px 12px;border-radius:999px;
+  content:"沽清";position:absolute;top:10px;right:12px;
+  background:#E63946;color:#fff;font-size:12px;font-weight:800;letter-spacing:2px;
+  padding:3px 11px;border-radius:999px;
 }
-
 .board-bottom{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;flex:0 0 auto}
 .board-used h3,.board-remain h3{
   font-size:15px;font-weight:700;color:#c7d4ea;margin:8px 0;letter-spacing:.5px;
@@ -422,7 +407,6 @@ body.board-mode main{padding:0;overflow:hidden;max-width:none}
 }
 .board-used-cell.on{border-style:solid;border-color:transparent}
 .board-used-cell.sold-out-cell{box-shadow:0 0 0 2px #E63946 inset}
-
 .board-remain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .board-remain-cell{
   display:flex;align-items:center;gap:6px;padding:8px 10px;
@@ -434,7 +418,6 @@ body.board-mode main{padding:0;overflow:hidden;max-width:none}
 .brc-dot{width:18px;height:18px;border-radius:6px;flex:0 0 auto;border:1px solid rgba(255,255,255,.2)}
 .brc-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .brc-num{margin-left:auto;font-variant-numeric:tabular-nums;white-space:nowrap}
-
 .board-suggest{
   text-align:center;font-size:15px;color:#c7d4ea;font-weight:600;
   background:#182338;border:1px dashed #33456a;border-radius:12px;padding:9px 14px;
@@ -502,7 +485,6 @@ body.board-mode main{padding:0;overflow:hidden;max-width:none}
   .board-remain-grid{grid-template-columns:repeat(3,1fr)}
   .board-channels{grid-template-columns:1fr}
   .board{min-height:auto;padding:12px}
-  .current-color-box{font-size:clamp(28px,8vw,48px);min-height:120px}
   .login-card{padding:26px 20px 22px}
   .login-card h2{font-size:18px}
   .board-header{grid-template-columns:1fr;gap:10px;text-align:center}
@@ -511,7 +493,7 @@ body.board-mode main{padding:0;overflow:hidden;max-width:none}
   .board-stat{justify-content:center}
 }
 @media (min-width:1024px){
-  .board-color-box{min-height:24vh}
+  .board-color-box{min-height:22vh}
   .board-used-cell{min-height:6.5vh}
 }
 </style>
@@ -584,7 +566,7 @@ body.board-mode main{padding:0;overflow:hidden;max-width:none}
       </div>
     </div>
     <div class="card">
-      <h2>顏色總表<span class="h2-tag">每疊 60 張</span></h2>
+      <h2>顏色總表<span class="h2-tag">每疊預設 60 張</span></h2>
       <div class="table-wrap">
         <table id="adminTable">
           <thead>
@@ -596,7 +578,50 @@ body.board-mode main{padding:0;overflow:hidden;max-width:none}
           <tbody></tbody>
         </table>
       </div>
+      <p class="hint">點「沽清／恢復」可以直接切換該顏色在所有通道的售賣狀態；「套用」用於快速修改疊數或剩餘總票數（會自動分配到各疊）。</p>
     </div>
+
+    <div class="card">
+      <h2>各疊細緻設定<span class="h2-tag">可逐疊設定票數與沽清</span></h2>
+      <div class="row">
+        <div class="field" style="flex:0 0 190px">
+          <label for="stackEditColor">選擇顏色</label>
+          <select id="stackEditColor"></select>
+        </div>
+        <button id="addStackBtn" class="btn">新增一疊</button>
+        <button id="saveStacksBtn" class="btn primary">儲存此顏色所有疊</button>
+      </div>
+      <div class="table-wrap" style="margin-top:12px">
+        <table class="stack-edit-table">
+          <thead>
+            <tr><th>疊</th><th>票數（容量）</th><th>剩餘票數</th><th>沽清</th><th>操作</th></tr>
+          </thead>
+          <tbody id="stackEditBody"></tbody>
+        </table>
+      </div>
+      <p class="hint" id="stackEditTotal"></p>
+    </div>
+
+    <div class="card">
+      <h2>組長即時工具<span class="h2-tag">隨機應變</span></h2>
+      <div class="row">
+        <div class="field" style="flex:0 0 170px">
+          <label for="fixCashSold">本場現金已售出（張）</label>
+          <input id="fixCashSold" type="number" min="0" step="1">
+        </div>
+        <div class="field" style="flex:0 0 170px">
+          <label for="fixEpaySold">本場 MPay 已售出（張）</label>
+          <input id="fixEpaySold" type="number" min="0" step="1">
+        </div>
+        <button id="applySalesBtn" class="btn primary">套用售出數</button>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <button id="clearUsedBtn" class="btn">清空本場已出現顏色</button>
+        <button id="restoreAllBtn" class="btn">全部顏色恢復非沽清</button>
+      </div>
+      <p class="hint">即時工具可直接修正本場兩通道的累計售出票數、重設本場顏色紀錄，或一鍵解除所有沽清標記，方便臨場調度。</p>
+    </div>
+
     <div class="card">
       <h2>場次控制</h2>
       <div class="btn-col">
@@ -606,7 +631,7 @@ body.board-mode main{padding:0;overflow:hidden;max-width:none}
         <button id="importBtn" class="btn">匯入 JSON 還原</button>
       </div>
       <input type="file" id="importFile" accept=".json,application/json" hidden>
-      <p class="hint">「下一場」會自動保留兩通道目前顏色，並將本場售票數據記錄至歷史資料。重置需管理員密碼。</p>
+      <p class="hint">「下一場」會自動保留兩通道目前仍可售賣的顏色疊，並將本場售票數據記錄至歷史資料。重置需管理員密碼。</p>
     </div>
     <div class="card">
       <h2>操作紀錄<span class="h2-tag">所有歷史紀錄</span></h2>
@@ -643,11 +668,11 @@ body.board-mode main{padding:0;overflow:hidden;max-width:none}
       <div class="board-channels">
         <div class="board-channel" data-ch="cash">
           <div class="board-channel-title">現金</div>
-          <div class="board-color-box empty">尚未選擇</div>
+          <div class="board-stack-grid"></div>
         </div>
         <div class="board-channel" data-ch="epay">
           <div class="board-channel-title">MPay</div>
-          <div class="board-color-box empty">尚未選擇</div>
+          <div class="board-stack-grid"></div>
         </div>
       </div>
       <div class="board-bottom">
@@ -656,7 +681,7 @@ body.board-mode main{padding:0;overflow:hidden;max-width:none}
           <div class="board-used-grid" id="boardUsedGrid"></div>
         </div>
         <div class="board-remain">
-          <h3>各顏色本疊剩餘票數</h3>
+          <h3>各顏色剩餘票數</h3>
           <div class="board-remain-grid" id="boardRemainGrid"></div>
         </div>
       </div>
@@ -803,18 +828,55 @@ let lastLocalTs = 0;
 let lastRemoteTs = 0;
 let appBootstrapped = false;
 
+/* ---- 疊 / 顏色工具 ---- */
+function defaultStack(total){
+  total = Number.isFinite(total) ? Math.max(0, Math.floor(total)) : TICKETS_PER_STACK;
+  return { total, remaining: total, soldOut: false };
+}
+function normalizeStackRaw(raw){
+  const total = Number.isFinite(raw && raw.total) ? Math.max(0, Math.floor(raw.total)) : TICKETS_PER_STACK;
+  let remaining = Number.isFinite(raw && raw.remaining) ? Math.floor(raw.remaining) : total;
+  remaining = Math.max(0, Math.min(remaining, total));
+  return { total, remaining, soldOut: !!(raw && raw.soldOut) || remaining <= 0 };
+}
+function syncColorObj(info){
+  if (!info || !Array.isArray(info.stacksDetail)) return;
+  info.stacks = info.stacksDetail.length;
+  info.total = info.stacksDetail.reduce((s,x)=>s + x.total, 0);
+  info.remaining = info.stacksDetail.reduce((s,x)=>s + x.remaining, 0);
+}
+function syncColor(name){
+  if (state && state.colors) syncColorObj(state.colors[name]);
+}
+function getStack(colorName, idx){
+  const info = state.colors[colorName];
+  if (!info) return null;
+  return info.stacksDetail[idx] || null;
+}
+function stackSellable(st){ return !!st && !st.soldOut && st.remaining > 0; }
+function colorFullyOut(name){
+  const info = state.colors[name];
+  if (!info || !info.stacksDetail.length) return true;
+  return info.stacksDetail.every(st => !stackSellable(st));
+}
+function firstSellableStackIndex(colorName){
+  const info = state.colors[colorName];
+  if (!info) return -1;
+  return info.stacksDetail.findIndex(st => stackSellable(st));
+}
+
 function defaultState(){
   const colors = {};
-  const sessionStartRemaining = {};
   COLOR_LIST.forEach(c => {
-    colors[c.name] = { stacks:1, total:TICKETS_PER_STACK, remaining:TICKETS_PER_STACK };
-    sessionStartRemaining[c.name] = TICKETS_PER_STACK;
+    colors[c.name] = { stacksDetail: [ defaultStack(TICKETS_PER_STACK) ] };
+    syncColorObj(colors[c.name]);
   });
   return {
-    sessionNo: 1, sessionName: '', colors, sessionStartRemaining, usedThisSession: [],
+    sessionNo: 1, sessionName: '', colors,
+    usedThisSession: [],
     channels: {
-      cash:{ currentColor:null, soldOut:false },
-      epay:{ currentColor:null, soldOut:false }
+      cash: { activeStacks: [] },
+      epay: { activeStacks: [] }
     },
     sessionSales: { cash: 0, epay: 0 },
     sessionPrices: {
@@ -826,16 +888,32 @@ function defaultState(){
     history: [], logs: []
   };
 }
+
+function normalizeChannel(raw, colors){
+  const out = { activeStacks: [] };
+  if (!raw) return out;
+  let list = [];
+  if (Array.isArray(raw.activeStacks)) list = raw.activeStacks;
+  else if (raw.currentColor) list = [{ color: raw.currentColor, stackIndex: 0 }];
+  list.forEach(a => {
+    if (!a || !a.color) return;
+    const info = colors[a.color];
+    if (!info || !info.stacksDetail.length) return;
+    let idx = Number.isFinite(a.stackIndex) ? Math.floor(a.stackIndex) : 0;
+    if (idx < 0 || idx >= info.stacksDetail.length) idx = 0;
+    if (out.activeStacks.some(x => x.color === a.color && x.stackIndex === idx)) return;
+    out.activeStacks.push({ color: a.color, stackIndex: idx });
+  });
+  return out;
+}
+
 function normalizeState(raw){
   const s = (raw && typeof raw === 'object') ? raw : {};
   const out = {
     sessionNo: Number.isFinite(s.sessionNo) && s.sessionNo > 0 ? Math.floor(s.sessionNo) : 1,
     sessionName: typeof s.sessionName === 'string' ? s.sessionName : '',
-    colors: {}, sessionStartRemaining: {}, usedThisSession: [],
-    channels: {
-      cash:{ currentColor:null, soldOut:false },
-      epay:{ currentColor:null, soldOut:false }
-    },
+    colors: {}, usedThisSession: [],
+    channels: { cash:{activeStacks:[]}, epay:{activeStacks:[]} },
     sessionSales: s.sessionSales && typeof s.sessionSales === 'object'
       ? { cash: Number(s.sessionSales.cash)||0, epay: Number(s.sessionSales.epay)||0 }
       : { cash: 0, epay: 0 },
@@ -852,33 +930,48 @@ function normalizeState(raw){
     history: Array.isArray(s.history) ? s.history : [],
     logs: Array.isArray(s.logs) ? s.logs : []
   };
+
   COLOR_LIST.forEach(c => {
     const src = (s.colors && s.colors[c.name]) ? s.colors[c.name] : {};
-    const stacks = Number.isFinite(src.stacks) && src.stacks >= 0 ? Math.floor(src.stacks) : 1;
-    const total = Number.isFinite(src.total) ? src.total : stacks * TICKETS_PER_STACK;
-    let remaining = Number.isFinite(src.remaining) ? src.remaining : total;
-    remaining = Math.max(0, Math.min(remaining, Math.max(total, 0)));
-    out.colors[c.name] = { stacks, total, remaining };
-
-    const ssr = s.sessionStartRemaining && s.sessionStartRemaining[c.name];
-    out.sessionStartRemaining[c.name] = Number.isFinite(ssr)
-      ? Math.max(0, Math.min(ssr, Math.max(total, 0)))
-      : remaining;
+    let details;
+    if (Array.isArray(src.stacksDetail) && src.stacksDetail.length){
+      details = src.stacksDetail.map(normalizeStackRaw);
+    } else {
+      /* 舊資料遷移 */
+      const n = Number.isFinite(src.stacks) && src.stacks > 0 ? Math.floor(src.stacks) : 1;
+      const total = Number.isFinite(src.total) ? Math.max(0, Math.floor(src.total)) : n * TICKETS_PER_STACK;
+      let remaining = Number.isFinite(src.remaining) ? Math.floor(src.remaining) : total;
+      remaining = Math.max(0, Math.min(remaining, total));
+      const base = Math.floor(total / n);
+      const extra = total - base * n;
+      let usedLeft = total - remaining;
+      details = [];
+      for (let i = 0; i < n; i++){
+        const t = base + (i < extra ? 1 : 0);
+        const u = Math.min(usedLeft, t);
+        usedLeft -= u;
+        details.push({ total: t, remaining: t - u, soldOut: (t - u) <= 0 });
+      }
+    }
+    out.colors[c.name] = { stacksDetail: details };
+    syncColorObj(out.colors[c.name]);
   });
+
   const validNames = COLOR_LIST.map(c => c.name);
   if (Array.isArray(s.usedThisSession)) {
     out.usedThisSession = s.usedThisSession.filter(n => validNames.includes(n));
   }
+  out.channels.cash = normalizeChannel(s.channels && s.channels.cash, out.colors);
+  if (out.channels.cash.activeStacks.length > 1) out.channels.cash.activeStacks = [out.channels.cash.activeStacks[0]];
+  out.channels.epay = normalizeChannel(s.channels && s.channels.epay, out.colors);
+
+  /* 通道已占用的疊 → 補進本場已出現顏色 */
   ['cash','epay'].forEach(ch => {
-    const src = s.channels && s.channels[ch];
-    const cur = src && src.currentColor;
-    out.channels[ch].currentColor = validNames.includes(cur) ? cur : null;
-    out.channels[ch].soldOut = out.channels[ch].currentColor ? !!(src && src.soldOut) : false;
+    out.channels[ch].activeStacks.forEach(a => {
+      if (!out.usedThisSession.includes(a.color)) out.usedThisSession.push(a.color);
+    });
   });
-  ['cash','epay'].forEach(ch => {
-    const cur = out.channels[ch].currentColor;
-    if (cur && !out.usedThisSession.includes(cur)) out.usedThisSession.push(cur);
-  });
+
   return out;
 }
 
@@ -1105,7 +1198,8 @@ function askPassword(title, message, confirmText = '確定'){
   });
 }
 
-function askColorSelect(title, bodyHTML){
+/* 通用：以按鈕挑選 */
+function askButtonChoice(title, bodyHTML, btnSelector, dataAttr){
   return new Promise(resolve => {
     const overlay = $('#modalOverlay');
     const btnConfirm = $('#modalConfirm');
@@ -1114,7 +1208,7 @@ function askColorSelect(title, bodyHTML){
     $('#modalBody').innerHTML = bodyHTML;
     btnConfirm.style.display = 'none';
     btnCancel.style.display = '';
-    btnCancel.textContent = '稍後再選';
+    btnCancel.textContent = '取消';
     overlay.classList.add('show');
 
     function cleanup(){
@@ -1122,14 +1216,14 @@ function askColorSelect(title, bodyHTML){
       btnConfirm.style.display = '';
       btnCancel.textContent = '取消';
       btnCancel.onclick = null; overlay.onclick = null;
-      $$('.soldout-pick', overlay).forEach(btn => btn.onclick = null);
+      $$(btnSelector, overlay).forEach(btn => btn.onclick = null);
       document.removeEventListener('keydown', onKey);
     }
     function onKey(e){
       if (e.key === 'Escape'){ e.preventDefault(); cleanup(); resolve(null); }
     }
-    $$('.soldout-pick', overlay).forEach(btn => {
-      btn.onclick = () => { const c = btn.dataset.color; cleanup(); resolve(c); };
+    $$(btnSelector, overlay).forEach(btn => {
+      btn.onclick = () => { const v = btn.dataset[dataAttr]; cleanup(); resolve(v === undefined ? null : v); };
     });
     btnCancel.onclick = () => { cleanup(); resolve(null); };
     overlay.onclick = (e) => { if (e.target === overlay){ cleanup(); resolve(null); } };
@@ -1175,19 +1269,14 @@ function enterApp(name){
   updateOperatorDisplay(name);
   hideLoginScreen();
 
-  // 先重置所有分頁按鈕為可見
   const allTabBtns = $$('.tab-btn');
   allTabBtns.forEach(btn => btn.style.display = '');
-
   const statsBtn = document.getElementById('statsTabBtn');
 
   if (name === 'mon') {
-    // 只顯示「顯示看板」分頁，其餘隱藏
     allTabBtns.forEach(btn => {
       if (btn.dataset.tab !== 'board') btn.style.display = 'none';
     });
-
-    // 強制切換到看板頁面
     allTabBtns.forEach(b => b.classList.remove('active'));
     const boardTab = document.querySelector('.tab-btn[data-tab="board"]');
     if (boardTab) boardTab.classList.add('active');
@@ -1195,10 +1284,8 @@ function enterApp(name){
     const boardPage = document.getElementById('page-board');
     if (boardPage) boardPage.classList.add('active');
     document.body.classList.add('board-mode');
-
     if (statsBtn) statsBtn.style.display = 'none';
   } else {
-    // 其他角色：恢復所有分頁顯示，再處理統計分頁
     allTabBtns.forEach(btn => btn.style.display = '');
     if (name === 'Hayson' || name === 'setting') {
       if (statsBtn) statsBtn.style.display = '';
@@ -1210,8 +1297,6 @@ function enterApp(name){
         if (adminTab) adminTab.click();
       }
     }
-
-    // 如果之前是 mon 登入，離開看板模式，並切回管理頁
     if (document.getElementById('page-board').classList.contains('active')) {
       const adminTab = document.querySelector('.tab-btn[data-tab="admin"]');
       if (adminTab) adminTab.click();
@@ -1245,134 +1330,21 @@ function checkExistingLogin(){
    業務邏輯
    ================================================================ */
 
-/* 判斷通道是否處於沽清狀態 */
+function channelActive(ch){ return state.channels[ch].activeStacks || []; }
+
 function isChannelSoldOut(ch){
-  const c = state.channels[ch];
-  return !!(c && c.soldOut && c.currentColor);
+  const arr = channelActive(ch);
+  if (!arr.length) return false;
+  return arr.every(a => !stackSellable(getStack(a.color, a.stackIndex)));
 }
 
-/* 判斷某顏色是否在任何通道沽清中，或全域已無票 */
-function isColorOut(colorName){
-  if (!state.colors[colorName]) return true;
-  if (state.colors[colorName].remaining <= 0) return true;
-  if (state.channels.cash.currentColor === colorName && state.channels.cash.soldOut) return true;
-  if (state.channels.epay.currentColor === colorName && state.channels.epay.soldOut) return true;
-  return false;
-}
-
-let _soldOutDialogOpen = false;
-async function showSoldOutDialog(ch, colorName){
-  if (_soldOutDialogOpen) return;
-  _soldOutDialogOpen = true;
-  try {
-    const channelLabel = ch === 'cash' ? '現金通道' : '電子支付通道';
-    const available = COLOR_LIST.filter(c =>
-      state.colors[c.name].remaining > 0 && !state.usedThisSession.includes(c.name)
-    );
-
-    if (!available.length){
-      await askConfirm('顏色已沽清',
-        `<p>「<b>${esc(colorName)}</b>」本疊已沽清。</p>
-         <p class="warn-text">本場已無其他可用顏色，請先處理庫存或進入下一場。</p>`,
-        '知道了', true);
-      return;
-    }
-
-    const colorBtns = available.map(c => {
-      const stackRemain = getCurrentStackRemaining(c.name);
-      return `<button type="button" class="color-pick soldout-pick" data-color="${esc(c.name)}">
-        <span class="dot" style="background:${c.hex}"></span>
-        <span>${esc(c.name)}</span>
-        <span class="cp-tag">本疊剩 ${stackRemain}</span>
-      </button>`;
-    }).join('');
-
-    const bodyHTML = `
-      <p class="warn-text" style="font-size:15px">⚠️「<b>${esc(colorName)}</b>」本疊已沽清！</p>
-      <p>本疊最後一張票已售出，請為 <b>${channelLabel}</b> 選擇下一款顏色：</p>
-      <div class="color-picker" style="margin-top:10px;grid-template-columns:repeat(auto-fill,minmax(100px,1fr))">${colorBtns}</div>
-      <p class="hint" style="margin-top:12px">如暫時不切換，可先關閉此視窗；售出功能將暫停，直至選擇新顏色。</p>
-    `;
-
-    const picked = await askColorSelect('顏色已沽清', bodyHTML);
-    if (picked){
-      applyColor(ch, picked);
-      toast(`已切換為「${picked}」`);
-    }
-  } finally {
-    _soldOutDialogOpen = false;
-  }
-}
-
-function sellTicket(ch, amount) {
-  const cur = state.channels[ch].currentColor;
-  const channelLabel = ch === 'cash' ? '現金' : '電子支付';
-  if (!cur) { toast('請先選擇顏色'); return; }
-
-  const info = state.colors[cur];
-
-  if (amount === 1) {
-    if (isChannelSoldOut(ch) || info.remaining <= 0) {
-      if (!isChannelSoldOut(ch)) { state.channels[ch].soldOut = true; persist(); renderAll(); }
-      toast('「' + cur + '」已沽清，請切換顏色');
-      showSoldOutDialog(ch, cur);
-      return;
-    }
-    info.remaining -= 1;
-    state.sessionSales[ch] += 1;
-    addLog(`${channelLabel}通道 售出 1 張票`);
-    /* 本疊是否剛剛賣完（used 為 60 的倍數且 > 0） */
-    const total = info.stacks * TICKETS_PER_STACK;
-    const used = total - info.remaining;
-    const justFinishedStack = used > 0 && used % TICKETS_PER_STACK === 0;
-    if (justFinishedStack) {
-      state.channels[ch].soldOut = true;
-      addLog(`${channelLabel}通道「${cur}」本疊已沽清（下一疊保留待用）`);
-    }
-    persist();
-    renderAll();
-    if (state.channels[ch].soldOut) showSoldOutDialog(ch, cur);
-    return;
-  }
-
-  if (amount === -1) {
-    if (state.sessionSales[ch] <= 0) { toast('本通道尚未售出任何票數，無法撤回'); return; }
-    const maxRemaining = info.stacks * TICKETS_PER_STACK;
-    if (info.remaining >= maxRemaining) { toast('票數已滿，無法撤回'); return; }
-    info.remaining += 1;
-    state.sessionSales[ch] -= 1;
-    addLog(`${channelLabel}通道 撤回 1 張票`);
-    if (info.remaining > 0) state.channels[ch].soldOut = false;
-    persist();
-    renderAll();
-  }
-}
-
-function getCurrentStackRemaining(colorName){
-  const info = state.colors[colorName];
-  if (!info || info.stacks <= 0 || info.remaining <= 0) return 0;
-  const total = info.stacks * TICKETS_PER_STACK;
-  const used = total - info.remaining;
-  return TICKETS_PER_STACK - (used % TICKETS_PER_STACK);
-}
-function calcGlobalRemainingFromStack(colorName, stackRemain){
-  const info = state.colors[colorName];
-  const total = info.stacks * TICKETS_PER_STACK;
-  const used = total - info.remaining;
-  const usedInPrevStacks = Math.floor(used / TICKETS_PER_STACK) * TICKETS_PER_STACK;
-  return Math.max(0, Math.min(total, total - (usedInPrevStacks + (TICKETS_PER_STACK - stackRemain))));
-}
-function formatRemainingStacks(remaining){
-  if (remaining <= 0) return '<span class="sr-out">0 疊</span>';
-  const fullStacks = Math.floor(remaining / TICKETS_PER_STACK);
-  const loose = remaining % TICKETS_PER_STACK;
-  if (loose === 0) return `<span class="sr-main">${fullStacks} 疊</span>`;
-  return `<span class="sr-main">${fullStacks}</span> + <span class="sr-loose">(${loose} 張)</span>`;
-}
 function getRecommendedColor(){
-  const candidates = COLOR_LIST.filter(c =>
-    state.colors[c.name].remaining > 0 && !state.usedThisSession.includes(c.name)
-  );
+  const candidates = COLOR_LIST.filter(c => {
+    const info = state.colors[c.name];
+    if (!info || info.remaining <= 0) return false;
+    if (state.usedThisSession.includes(c.name)) return false;
+    return info.stacksDetail.some(st => stackSellable(st));
+  });
   if (!candidates.length) return null;
   candidates.sort((a, b) => {
     const sa = state.colors[a.name].stacks;
@@ -1386,66 +1358,122 @@ function getRecommendedColor(){
   return candidates[0].name;
 }
 
-function applyColor(ch, colorName){
-  const channelLabel = ch === 'cash' ? '現金通道' : '電子支付通道';
-  const oldColor = state.channels[ch].currentColor;
+function formatRemainingStacks(remaining){
+  if (remaining <= 0) return '<span class="sr-out">0 疊</span>';
+  const fullStacks = Math.floor(remaining / TICKETS_PER_STACK);
+  const loose = remaining % TICKETS_PER_STACK;
+  if (loose === 0) return `<span class="sr-main">${fullStacks} 疊</span>`;
+  return `<span class="sr-main">${fullStacks}</span> + <span class="sr-loose">(${loose} 張)</span>`;
+}
 
-  if (oldColor && oldColor !== colorName) {
-    const oldInfo = state.colors[oldColor];
-    const total = oldInfo.stacks * TICKETS_PER_STACK;
-    const used = total - oldInfo.remaining;
-    const justFinishedStack = used > 0 && used % TICKETS_PER_STACK === 0;
-    /* 只有「本疊尚未賣完」才自動結算剩餘，避免把下一整疊誤算 */
-    if (!justFinishedStack) {
-      const stackRemain = getCurrentStackRemaining(oldColor);
-      if (stackRemain > 0) {
-        oldInfo.remaining = Math.max(0, oldInfo.remaining - stackRemain);
-        state.sessionSales[ch] += stackRemain;
-        addLog(`${channelLabel} 切換顏色：自動結算「${oldColor}」本疊剩 ${stackRemain} 張，計入本場已售出`);
-      }
-    }
-  }
+/* ---- 售票 / 撤回 ---- */
+function sellTickets(ch, colorName, stackIndex, qty){
+  const info = state.colors[colorName];
+  if (!info) return;
+  const st = info.stacksDetail[stackIndex];
+  if (!st){ toast('找不到該疊'); return; }
+  qty = Math.max(1, Math.floor(qty) || 1);
+  if (!stackSellable(st)){ toast('此疊已沽清'); return; }
+  const n = Math.min(qty, st.remaining);
+  st.remaining -= n;
+  state.sessionSales[ch] += n;
+  if (st.remaining <= 0) st.soldOut = true;
+  syncColor(colorName);
+  const chLabel = ch === 'cash' ? '現金' : 'MPay';
+  addLog(`${chLabel} 售出「${colorName}」第 ${stackIndex+1} 疊 ${n} 張`);
+  persist(); renderAll();
+  if (st.remaining <= 0) toast(`「${colorName}」第 ${stackIndex+1} 疊已沽清`);
+}
 
-  state.channels[ch].currentColor = colorName;
-  state.channels[ch].soldOut = false;
-  if (!state.usedThisSession.includes(colorName)) state.usedThisSession.push(colorName);
-  addLog(`${channelLabel} 切換目前顏色為「${colorName}」`);
+function undoTickets(ch, colorName, stackIndex, qty){
+  const info = state.colors[colorName];
+  if (!info) return;
+  const st = info.stacksDetail[stackIndex];
+  if (!st){ toast('找不到該疊'); return; }
+  qty = Math.max(1, Math.floor(qty) || 1);
+  const n = Math.min(qty, st.total - st.remaining);
+  if (n <= 0){ toast('此疊已滿，無法撤回'); return; }
+  st.remaining += n;
+  state.sessionSales[ch] = Math.max(0, state.sessionSales[ch] - n);
+  if (st.remaining > 0) st.soldOut = false;
+  syncColor(colorName);
+  const chLabel = ch === 'cash' ? '現金' : 'MPay';
+  addLog(`${chLabel} 撤回「${colorName}」第 ${stackIndex+1} 疊 ${n} 張`);
   persist(); renderAll();
 }
 
-async function selectColor(ch, colorName, skipConfirm = false){
-  const cur = state.channels[ch].currentColor;
-  if (colorName === cur) { toast('此顏色已是目前使用顏色'); return; }
+/* ---- 通道挑選疊 ---- */
+async function askStackSelect(title, colorName){
+  const info = state.colors[colorName];
+  if (!info) return null;
+  const sellable = info.stacksDetail.map((st, i) => ({ st, i })).filter(x => stackSellable(x.st));
+  if (!sellable.length) return null;
+  if (sellable.length === 1) return sellable[0].i;
+
+  const btns = info.stacksDetail.map((st, i) => {
+    const ok = stackSellable(st);
+    return `<button type="button" class="color-pick stack-pick" data-idx="${i}" ${ok ? '' : 'disabled'}>
+      <span>第 ${i+1} 疊</span>
+      <span class="cp-tag">剩 ${st.remaining} / ${st.total}</span>
+    </button>`;
+  }).join('');
+
+  const bodyHTML = `
+    <p>顏色「<b>${esc(colorName)}</b>」有多疊，請選擇要售賣的疊：</p>
+    <div class="color-picker" style="margin-top:10px">${btns}</div>`;
+
+  const v = await askButtonChoice(title, bodyHTML, '.stack-pick', 'idx');
+  return v === null ? null : Number(v);
+}
+
+async function selectStack(ch, colorName, stackIndex){
   const other = ch === 'cash' ? 'epay' : 'cash';
-  const otherLabel = other === 'cash' ? '現金通道' : '電子支付通道';
-  const thisLabel  = ch === 'cash' ? '現金通道' : '電子支付通道';
-  if (state.colors[colorName].remaining <= 0){
-    await askConfirm('無法選用', `<p>「<b>${esc(colorName)}</b>」票數已用完，無法選用。</p>`, '知道了', true); return;
+  const occupied = state.channels[other].activeStacks.some(a => a.color === colorName && a.stackIndex === stackIndex);
+  if (occupied){
+    await askConfirm('此疊已被佔用', `<p>「<b>${esc(colorName)}</b>」第 ${stackIndex+1} 疊目前由另一個通道使用中，請選擇其他疊。</p>`, '知道了', true);
+    return;
   }
-  if (state.usedThisSession.includes(colorName)){
-    const byOther = state.channels[other].currentColor === colorName;
-    const msg = byOther
-      ? `<p>「<b>${esc(colorName)}</b>」本場已由 <b>${otherLabel}</b> 使用。</p><p class="warn-text">同一場次內，兩通道合計不可重複使用同一顏色。</p>`
-      : `<p>「<b>${esc(colorName)}</b>」本場已經出現過。</p><p class="warn-text">同一場次內，每種顏色只能出現一次。</p>`;
-    await askConfirm('顏色衝突', msg, '知道了', true); return;
+  const already = state.channels[ch].activeStacks.some(a => a.color === colorName && a.stackIndex === stackIndex);
+  if (already){ toast('該疊已在售賣中'); return; }
+  const st = getStack(colorName, stackIndex);
+  if (!st || !stackSellable(st)){
+    await askConfirm('無法選用', `<p>「<b>${esc(colorName)}</b>」第 ${stackIndex+1} 疊已沽清或沒有票。</p>`, '知道了', true);
+    return;
   }
-  if (!skipConfirm){
-    const c = COLOR_MAP[colorName];
-    const oldStack = cur ? getCurrentStackRemaining(cur) : 0;
-    const oldSoldOut = isChannelSoldOut(ch);
-    let oldDesc = '';
-    if (cur && oldStack > 0 && !oldSoldOut) {
-      oldDesc = `<p class="warn-text">注意：切換後，原本的「${esc(cur)}」本疊剩餘 ${oldStack} 張，將視為已售出（計入本場銷量）。</p>`;
-    }
-    const ok = await askConfirm('切換目前顏色',
-      `<p>將 <b>${thisLabel}</b> 的目前顏色設為：</p>
-       <div class="modal-swatch" style="background:${c.hex};color:${c.text}">${esc(colorName)}</div>
-       <p>此顏色目前全域剩餘 <b>${state.colors[colorName].remaining}</b> 張，選用後將標記為「本場已使用」。</p>
-       ${oldDesc}`,
-      '確定切換');
-    if (!ok) return;
+  const c = COLOR_MAP[colorName];
+  const isCash = ch === 'cash';
+  const ok = await askConfirm(
+    isCash ? '切換現金售賣顏色' : '新增 MPay 售賣疊',
+    `<p>${isCash ? '將現金通道的售賣顏色設為：' : '為電子支付通道新增售賣疊：'}</p>
+     <div class="modal-swatch" style="background:${c.hex};color:${c.text}">${esc(colorName)} · 第 ${stackIndex+1} 疊</div>
+     <p>此疊剩餘 <b>${st.remaining}</b> / ${st.total} 張。</p>
+     <p class="hint">切換不會自動結算舊顏色，舊顏色只是不再於此通道售賣。</p>`,
+    '確定');
+  if (!ok) return;
+
+  if (isCash){
+    state.channels.cash.activeStacks = [{ color: colorName, stackIndex }];
+  } else {
+    state.channels.epay.activeStacks.push({ color: colorName, stackIndex });
   }
-  applyColor(ch, colorName);
+  if (!state.usedThisSession.includes(colorName)) state.usedThisSession.push(colorName);
+  addLog(`${isCash ? '現金' : 'MPay'}通道 ${isCash ? '切換' : '新增'}售賣「${colorName}」第 ${stackIndex+1} 疊`);
+  persist(); renderAll();
+}
+
+async function onPickColor(ch, colorName){
+  const idx = await askStackSelect('選擇售賣的疊', colorName);
+  if (idx === null) return;
+  await selectStack(ch, colorName, idx);
+}
+
+function removeActiveStack(ch, idx){
+  const arr = state.channels[ch].activeStacks;
+  if (idx < 0 || idx >= arr.length) return;
+  const a = arr[idx];
+  arr.splice(idx, 1);
+  addLog(`${ch === 'cash' ? '現金' : 'MPay'}通道 移除「${a.color}」第 ${a.stackIndex+1} 疊`);
+  persist(); renderAll();
 }
 
 async function recommend(ch){
@@ -1458,44 +1486,40 @@ async function recommend(ch){
   const ok = await askConfirm('自動推薦下一款顏色',
     `<p>推薦邏輯：排除本場已用與已用完的顏色，優先選擇<b>總疊數最多</b>者（先清大庫存）；同疊數時選剩餘票數較少者。</p>
      <div class="modal-swatch" style="background:${c.hex};color:${c.text}">${esc(pick)}</div>
-     <p>此顏色目前共 <b>${info.stacks}</b> 疊、全域剩餘 <b>${info.remaining}</b> 張。</p><p>是否採用此顏色？</p>`, '採用此顏色');
+     <p>此顏色共 <b>${info.stacks}</b> 疊、剩餘 <b>${info.remaining}</b> 張。</p><p>是否採用此顏色？</p>`, '採用此顏色');
   if (!ok) return;
-  await selectColor(ch, pick, true);
+  const idx = firstSellableStackIndex(pick);
+  if (idx < 0){ toast('該顏色已無可售疊'); return; }
+  await selectStack(ch, pick, idx);
 }
 
+/* ---- 手動登記某一疊剩餘 ---- */
 async function submitRemain(ch){
   const sec = $('#page-' + ch);
+  const sel = $('.remain-stack-select', sec);
   const input = $('.channel-remain-input', sec);
-  const cur = state.channels[ch].currentColor;
-  const channelLabel = ch === 'cash' ? '現金通道' : '電子支付通道';
-  if (!cur){ await askConfirm('尚未選擇顏色', '<p>請先選擇目前使用的顏色，再登記本疊剩餘票數。</p>', '知道了', true); return; }
+  const act = state.channels[ch].activeStacks;
+  const chLabel = ch === 'cash' ? '現金' : 'MPay';
+  if (!act.length){ toast('請先選擇售賣顏色'); return; }
+  const idx = Number(sel.value) || 0;
+  const a = act[idx];
+  if (!a){ toast('找不到該疊'); return; }
+  const st = getStack(a.color, a.stackIndex);
+  if (!st){ toast('找不到該疊'); return; }
   const raw = input.value.trim();
-  if (raw === '' || !Number.isFinite(Number(raw))){ await askConfirm('輸入錯誤', '<p>請輸入有效的數字（0 ～ 60）。</p>', '知道了', true); return; }
+  if (raw === '' || !Number.isFinite(Number(raw))){ toast('請輸入有效數字'); return; }
   let val = Math.floor(Number(raw));
-  if (val < 0) val = 0;
-  if (val > TICKETS_PER_STACK) val = TICKETS_PER_STACK;
-  const info = state.colors[cur];
-  const oldStackRemain = getCurrentStackRemaining(cur);
-  if (val === oldStackRemain){ toast('沒有變更'); return; }
-  const newRemain = calcGlobalRemainingFromStack(cur, val);
+  val = Math.max(0, Math.min(val, st.total));
+  if (val === st.remaining){ toast('沒有變更'); return; }
   const ok = await askConfirm('確認登記本疊剩餘票數',
-    `<p>顏色：<b>${esc(cur)}</b>（共 ${info.stacks} 疊）</p>
-     <p>本疊剩餘：<b>${oldStackRemain}</b> → <b>${val}</b> 張</p>
-     <p>該顏色全域剩餘：${info.remaining} → <b>${newRemain}</b> 張。</p>`, '確定登記');
+    `<p>顏色：<b>${esc(a.color)}</b> · 第 ${a.stackIndex+1} 疊</p>
+     <p>本疊剩餘：<b>${st.remaining}</b> → <b>${val}</b> 張（容量 ${st.total}）</p>`,
+    '確定登記');
   if (!ok){ renderChannel(ch); return; }
-  info.remaining = newRemain;
-  addLog(`${channelLabel} 手動登記「${cur}」本疊剩餘 ${val} 張`);
-  const total = info.stacks * TICKETS_PER_STACK;
-  const used = total - info.remaining;
-  const justFinishedStack = used > 0 && used % TICKETS_PER_STACK === 0;
-  if (justFinishedStack || info.remaining <= 0) {
-    state.channels[ch].soldOut = true;
-    addLog(`${channelLabel}「${cur}」本疊已沽清`);
-    persist(); renderAll();
-    showSoldOutDialog(ch, cur);
-    return;
-  }
-  if (state.channels[ch].soldOut) state.channels[ch].soldOut = false;
+  st.remaining = val;
+  st.soldOut = val <= 0;
+  syncColor(a.color);
+  addLog(`${chLabel} 手動登記「${a.color}」第 ${a.stackIndex+1} 疊剩餘 ${val} 張`);
   persist(); renderAll();
 }
 
@@ -1506,35 +1530,68 @@ function renderAdmin(){
   const noInput = $('#sessionNoInput'), nmInput = $('#sessionNameInput');
   if (document.activeElement !== noInput) noInput.value = state.sessionNo;
   if (document.activeElement !== nmInput) nmInput.value = state.sessionName || '';
+
   const tbody = $('#adminTable tbody');
   const activeInTable = document.activeElement && document.activeElement.closest && document.activeElement.closest('#adminTable');
   if (!activeInTable){
     tbody.innerHTML = COLOR_LIST.map(c => {
       const info = state.colors[c.name];
       const used = state.usedThisSession.includes(c.name);
+      const fullyOut = colorFullyOut(c.name);
       const empty = info.remaining <= 0;
-      const out = isColorOut(c.name);
       let statusHTML;
       if (empty) statusHTML = '<span class="tag-out">沽清</span>';
-      else if (out) statusHTML = '<span class="tag-out">本疊沽清</span>';
+      else if (fullyOut) statusHTML = '<span class="tag-out">本疊沽清</span>';
       else if (used) statusHTML = '<span class="tag used">本場已用</span>';
       else statusHTML = '<span class="tag">未使用</span>';
-      if (!empty && !out && info.remaining <= 10 && !used) statusHTML += ' <span class="tag-warn">快用完</span>';
+      if (!empty && !fullyOut && info.remaining <= 10 && !used) statusHTML += ' <span class="tag-warn">快用完</span>';
       return `<tr data-color="${esc(c.name)}" class="${used ? 'used-row' : ''}">
         <td><span class="swatch" style="background:${c.hex}"></span>${esc(c.name)}</td>
-        <td><input type="number" class="stacks-input" min="0" step="1" value="${info.stacks}"></td>
+        <td><input type="number" class="stacks-input" min="1" step="1" value="${info.stacks}"></td>
         <td class="total-cell">${info.total}</td>
         <td><input type="number" class="remain-input" min="0" step="1" value="${info.remaining}"></td>
         <td class="stack-remain-cell">${formatRemainingStacks(info.remaining)}</td>
         <td class="status-cell">${statusHTML}</td>
-        <td><button class="btn small primary apply-row">套用</button></td>
+        <td style="white-space:nowrap">
+          <button class="btn small primary apply-row">套用</button>
+          <button class="btn small toggle-soldout" data-color="${esc(c.name)}">${fullyOut ? '恢復' : '沽清'}</button>
+        </td>
       </tr>`;
     }).join('');
   }
+
   const logList = $('#logList');
   if (!state.logs.length) logList.innerHTML = '<li class="empty">尚無操作紀錄</li>';
   else logList.innerHTML = state.logs.map(l => `
     <li><span class="log-time">${fmtTime(l.time)}</span><span class="log-who">${esc(l.who)}</span><span class="log-act">${esc(l.action)}</span></li>`).join('');
+
+  const fixCash = $('#fixCashSold'), fixEpay = $('#fixEpaySold');
+  if (fixCash && document.activeElement !== fixCash) fixCash.value = state.sessionSales.cash;
+  if (fixEpay && document.activeElement !== fixEpay) fixEpay.value = state.sessionSales.epay;
+
+  renderStackEditor();
+}
+
+/* 疊數調整：重建 / 保留 */
+function resizeStacks(colorName, n){
+  const info = state.colors[colorName];
+  const d = info.stacksDetail;
+  while (d.length > n) d.pop();
+  while (d.length < n) d.push(defaultStack(TICKETS_PER_STACK));
+}
+function distributeRemaining(colorName, R){
+  const info = state.colors[colorName];
+  const d = info.stacksDetail;
+  const total = d.reduce((s,x)=>s + x.total, 0);
+  R = Math.max(0, Math.min(Math.floor(R), total));
+  let left = R;
+  for (let i = d.length - 1; i >= 0; i--){
+    const take = Math.min(left, d[i].total);
+    d[i].remaining = take;
+    d[i].soldOut = take <= 0;
+    left -= take;
+  }
+  syncColor(colorName);
 }
 
 async function applyRowChanges(colorName){
@@ -1543,62 +1600,110 @@ async function applyRowChanges(colorName){
   const stacksInput = $('.stacks-input', tr);
   const remainInput = $('.remain-input', tr);
   const info = state.colors[colorName];
-  const newStacks = Math.max(0, Math.floor(Number(stacksInput.value) || 0));
+  const newStacks = Math.max(1, Math.floor(Number(stacksInput.value) || 1));
   const newRemain = Math.max(0, Math.floor(Number(remainInput.value) || 0));
+
   if (newStacks === info.stacks && newRemain === info.remaining){ toast('沒有變更'); return; }
+
   if (newStacks !== info.stacks){
     const newTotal = newStacks * TICKETS_PER_STACK;
-    const delta = (newStacks - info.stacks) * TICKETS_PER_STACK;
-    let calcRemain = info.remaining + delta;
-    calcRemain = Math.max(0, Math.min(newTotal, calcRemain));
     const ok = await askConfirm('確認變更疊數',
       `<p>「<b>${esc(colorName)}</b>」的疊數將由 <b>${info.stacks}</b> 改為 <b>${newStacks}</b>。</p>
-       <p>總票數：${info.total} → <b>${newTotal}</b></p>
-       <p>剩餘票數：${info.remaining} → <b>${calcRemain}</b></p>`, '確定套用');
+       <p>每疊容量預設為 ${TICKETS_PER_STACK} 張。</p>
+       <p>剩餘票數將依新疊數重新分配。</p>`, '確定套用');
     if (!ok){ renderAdmin(); return; }
-    info.stacks = newStacks; info.total = newTotal; info.remaining = calcRemain;
+    resizeStacks(colorName, newStacks);
+    distributeRemaining(colorName, newRemain);
+    /* 通道上的索引可能需要修正 */
+    ['cash','epay'].forEach(ch => {
+      state.channels[ch].activeStacks.forEach(a => {
+        if (a.color === colorName && a.stackIndex >= newStacks) a.stackIndex = newStacks - 1;
+      });
+    });
     addLog(`調整「${colorName}」疊數為 ${newStacks}`);
     persist(); renderAll(); return;
   }
+
   if (newRemain !== info.remaining){
     const ok = await askConfirm('確認覆寫剩餘票數',
-      `<p>「<b>${esc(colorName)}</b>」的剩餘票數將由 <b>${info.remaining}</b> 覆寫為 <b>${newRemain}</b>。</p>`, '確定覆寫');
+      `<p>「<b>${esc(colorName)}</b>」的剩餘總票數將由 <b>${info.remaining}</b> 覆寫為 <b>${newRemain}</b>，並自動分配到各疊。</p>`, '確定覆寫');
     if (!ok){ renderAdmin(); return; }
-    info.remaining = newRemain;
-    addLog(`手動修正「${colorName}」剩餘票數為 ${newRemain}`);
+    distributeRemaining(colorName, newRemain);
+    addLog(`手動修正「${colorName}」剩餘總票數為 ${newRemain}`);
     persist(); renderAll();
   }
 }
 
-function channelInnerHTML(title){
+async function toggleColorSoldOut(colorName){
+  const info = state.colors[colorName];
+  const fullyOut = info.stacksDetail.every(st => st.soldOut);
+  const target = !fullyOut;
+  const ok = await askConfirm(target ? '設為沽清' : '恢復正常',
+    `<p>將「<b>${esc(colorName)}</b>」的所有 ${info.stacks} 疊${target ? '<b class="warn-text">標記為沽清</b>' : '恢復為正常售賣'}？</p>`,
+    '確定');
+  if (!ok) return;
+  info.stacksDetail.forEach(st => { st.soldOut = target; });
+  addLog(`手動${target ? '將' : '取消'}「${colorName}」${target ? '設為沽清' : '沽清狀態'}`);
+  persist(); renderAll();
+  toast(`${colorName} 已${target ? '設為沽清' : '恢復正常'}`);
+}
+
+/* ---- 各疊細緻設定 ---- */
+let stackEditColor = COLOR_LIST[0].name;
+
+function renderStackEditor(){
+  const sel = $('#stackEditColor');
+  if (!sel) return;
+  if (!sel.dataset.init){
+    sel.innerHTML = COLOR_LIST.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+    sel.dataset.init = '1';
+    sel.value = stackEditColor;
+  }
+  if (!sel.value) sel.value = COLOR_LIST[0].name;
+  stackEditColor = sel.value;
+
+  const body = $('#stackEditBody');
+  if (document.activeElement && document.activeElement.closest && document.activeElement.closest('#stackEditBody')) return;
+  const info = state.colors[stackEditColor];
+  body.innerHTML = info.stacksDetail.map((st, i) => `
+    <tr data-idx="${i}">
+      <td>第 ${i+1} 疊</td>
+      <td><input type="number" class="se-total" min="0" step="1" value="${st.total}"></td>
+      <td><input type="number" class="se-remain" min="0" step="1" value="${st.remaining}"></td>
+      <td><input type="checkbox" class="se-soldout" ${st.soldOut ? 'checked' : ''}></td>
+      <td><button class="btn small danger se-del">刪除</button></td>
+    </tr>`).join('') || `<tr><td colspan="5" class="muted" style="text-align:center;padding:16px">此顏色尚未有任何疊</td></tr>`;
+
+  const totalEl = $('#stackEditTotal');
+  if (totalEl) totalEl.textContent = `共 ${info.stacks} 疊，總票數 ${info.total}，剩餘 ${info.remaining} 張。修改後請按「儲存此顏色所有疊」。`;
+}
+
+/* ---- 通道頁 ---- */
+function channelInnerHTML(ch, title){
   return `
   <div class="channel-wrap">
     <div class="card span-full current-card">
-      <h2>${title} · 目前使用顏色</h2>
-      <div class="schedule-info" id="${title==='現金通道'?'cash':'epay'}-schedule"></div>
-      <div class="current-color-box empty" style="margin-top:10px;">尚未選擇</div>
-      <div class="current-meta">
-        <span>本疊剩餘：<b class="current-stack-remain">—</b> 張</span>
-        <span>本顏色全域剩餘：<b class="current-remain">—</b> 張</span>
+      <h2>${title} · 目前售賣</h2>
+      <div class="schedule-info"></div>
+      <div class="active-stacks-display"></div>
+      <div class="sell-controls-area"></div>
+      <div class="current-meta" style="margin-top:16px">
         <span>本場已出現顏色：<b class="qi-used-count">0 / 9</b></span>
         <span class="meta-sold">本場已售出 <b class="session-sold">0</b> 張</span>
-      </div>
-      <div class="sell-controls">
-        <button class="btn sell-btn">售出一張 (+1)</button>
-        <button class="btn undo-btn">撤回一張 (-1)</button>
       </div>
     </div>
     <div class="card">
       <h2>操作</h2>
       <button class="btn primary full recommend-btn">System 推薦下一款顏色</button>
       <div class="field">
-        <label>手動選擇顏色（僅列出本場未使用且仍有票的顏色）</label>
+        <label>${ch === 'cash' ? '手動切換現金售賣顏色' : '新增 MPay 售賣顏色 / 疊'}</label>
         <div class="color-picker"></div>
       </div>
       <div class="field">
-        <label>手動登記本疊剩餘票數（特殊狀況使用）</label>
+        <label>手動登記某一疊的剩餘票數（特殊狀況使用）</label>
         <div class="row">
-          <input type="number" class="channel-remain-input" min="0" max="60" step="1" placeholder="本疊剩餘票數">
+          <select class="remain-stack-select" style="flex:1"></select>
+          <input type="number" class="channel-remain-input" min="0" step="1" placeholder="剩餘" style="flex:0 0 90px">
           <button class="btn primary submit-remain">送出</button>
         </div>
       </div>
@@ -1613,14 +1718,13 @@ function channelInnerHTML(title){
 function renderChannel(ch){
   const sec = $('#page-' + ch);
   if (!sec) return;
-  const cur = state.channels[ch].currentColor;
-  const info = cur ? state.colors[cur] : null;
-  const soldOut = isChannelSoldOut(ch);
+  const act = state.channels[ch].activeStacks;
 
+  /* 場次時間 */
   const day = getDisplayDay();
   const schedule = SCHEDULE[day];
   const sessionIdx = state.sessionNo - 1;
-  const timeEl = $(`#${ch}-schedule`, sec);
+  const timeEl = $('.schedule-info', sec);
   if (timeEl) {
     if (schedule && schedule[sessionIdx]) {
       const data = schedule[sessionIdx];
@@ -1630,75 +1734,103 @@ function renderChannel(ch){
     }
   }
 
-  const box = $('.current-color-box', sec);
-  if (cur){
-    const c = COLOR_MAP[cur];
-    box.style.background = c.hex; box.style.color = c.text;
-    box.style.borderColor = 'transparent';
-    box.textContent = soldOut ? `${cur}（本疊已沽清）` : cur;
-    box.classList.remove('empty');
-    box.classList.toggle('sold-out', soldOut);
+  /* 目前售賣疊 */
+  const disp = $('.active-stacks-display', sec);
+  if (!act.length){
+    disp.innerHTML = `<div class="current-color-box empty" style="grid-column:1/-1">尚未選擇售賣顏色</div>`;
   } else {
-    box.style.background = ''; box.style.color = ''; box.style.borderColor = '';
-    box.textContent = '尚未選擇'; box.classList.add('empty');
-    box.classList.remove('sold-out');
-  }
-  $('.current-stack-remain', sec).textContent = soldOut ? '沽清' : (info ? getCurrentStackRemaining(cur) : '—');
-  $('.current-stack-remain', sec).classList.toggle('sr-soldout', soldOut);
-  $('.current-remain', sec).textContent = info ? info.remaining : '—';
-  $('.qi-used-count', sec).textContent = `${state.usedThisSession.length} / 9`;
-  $('.session-sold', sec).textContent = state.sessionSales.cash + state.sessionSales.epay;
-
-  const sellBtn = $('.sell-btn', sec);
-  if (sellBtn){
-    const canSell = !!(cur && info && !soldOut && info.remaining > 0);
-    sellBtn.classList.toggle('sold-out', !canSell && !!cur);
-    sellBtn.textContent = canSell ? '售出一張 (+1)' : (cur ? '本疊已沽清，點擊切換顏色' : '售出一張 (+1)');
+    disp.innerHTML = act.map((a, i) => {
+      const c = COLOR_MAP[a.color];
+      const st = getStack(a.color, a.stackIndex) || { remaining:0, total:0 };
+      const out = !stackSellable(st);
+      return `<div class="active-stack-card ${out ? 'sold-out' : ''}" style="background:${c.hex};color:${c.text}">
+        <button class="asc-remove" data-idx="${i}" title="移除">✕</button>
+        <div class="asc-name">${esc(a.color)}</div>
+        <div class="asc-stack">第 ${a.stackIndex+1} 疊</div>
+        <div class="asc-remain">剩 ${st.remaining} / ${st.total}</div>
+      </div>`;
+    }).join('');
   }
 
+  /* 售票控制 */
+  const sellArea = $('.sell-controls-area', sec);
+  if (!act.length){
+    sellArea.innerHTML = `<p class="hint">請先選擇要售賣的顏色。</p>`;
+  } else if (ch === 'cash'){
+    const a = act[0];
+    const st = getStack(a.color, a.stackIndex);
+    const canSell = stackSellable(st);
+    sellArea.innerHTML = `
+      <div class="sell-controls">
+        <button class="btn sell-btn ${canSell ? '' : 'sold-out'}" ${canSell ? '' : 'disabled'}>售出一張 (+1)</button>
+        <button class="btn undo-btn">撤回一張 (-1)</button>
+      </div>`;
+  } else {
+    sellArea.innerHTML = `
+      <div class="sell-controls">
+        <select class="sell-target">
+          ${act.map((a, i) => {
+            const st = getStack(a.color, a.stackIndex);
+            return `<option value="${i}">${esc(a.color)} · 第 ${a.stackIndex+1} 疊（剩 ${st ? st.remaining : 0}）</option>`;
+          }).join('')}
+        </select>
+        <input type="number" class="sell-qty" min="1" step="1" value="1">
+        <button class="btn sell-btn">售出</button>
+        <button class="btn undo-btn">撤回</button>
+      </div>
+      <p class="hint">先選要售賣的顏色疊，再輸入售出張數。</p>`;
+  }
+
+  /* 手動登記剩餘的下拉 */
+  const remainSelect = $('.remain-stack-select', sec);
+  if (remainSelect){
+    if (act.length){
+      remainSelect.disabled = false;
+      remainSelect.innerHTML = act.map((a, i) => {
+        const st = getStack(a.color, a.stackIndex);
+        return `<option value="${i}">${esc(a.color)} · 第 ${a.stackIndex+1} 疊（剩 ${st ? st.remaining : 0}）</option>`;
+      }).join('');
+    } else {
+      remainSelect.disabled = true;
+      remainSelect.innerHTML = `<option>（尚未選擇顏色）</option>`;
+    }
+  }
+
+  /* 顏色挑選 */
   const picker = $('.color-picker', sec);
   picker.innerHTML = COLOR_LIST.map(c => {
-    const ci = state.colors[c.name];
-    const isCurrent = c.name === cur;
-    const usedByOther = state.usedThisSession.includes(c.name) && !isCurrent;
-    const isEmpty = ci.remaining <= 0;
-    const isSoldOutThis = isCurrent && soldOut;
-    const disabled = usedByOther || isEmpty || isSoldOutThis;
-    let tag, extraCls = '';
-    if (isSoldOutThis) { tag = '本疊沽清'; extraCls = ' sold-out-current'; }
-    else if (isEmpty) tag = '沽清';
-    else if (usedByOther) tag = '本場已用';
-    else if (ci.remaining <= 10) tag = `剩 ${ci.remaining}（快用完）`;
-    else tag = `剩 ${ci.remaining}`;
-    return `<button class="color-pick${isCurrent ? ' active' : ''}${extraCls}"
-              data-color="${esc(c.name)}"
-              ${disabled ? 'disabled' : ''}>
-              <span class="dot" style="background:${c.hex}"></span>
-              <span>${esc(c.name)}</span>
-              <span class="cp-tag">${tag}</span>
-            </button>`;
+    const info = state.colors[c.name];
+    const idx = firstSellableStackIndex(c.name);
+    const usable = idx >= 0;
+    const used = state.usedThisSession.includes(c.name);
+    const tag = usable ? `共剩 ${info.remaining}` : '沽清';
+    return `<button class="color-pick ${used ? 'used-color' : ''}" data-color="${esc(c.name)}" ${usable ? '' : 'disabled'}>
+      <span class="dot" style="background:${c.hex}"></span>
+      <span>${esc(c.name)}</span>
+      <span class="cp-tag">${tag}</span>
+    </button>`;
   }).join('');
 
-  const remInput = $('.channel-remain-input', sec);
-  if (document.activeElement !== remInput) remInput.value = info ? getCurrentStackRemaining(cur) : '';
-
+  /* 已出現顏色 */
   const usedGrid = $('.used-chips', sec);
   usedGrid.innerHTML = COLOR_LIST.map(c => {
     const on = state.usedThisSession.includes(c.name);
-    const out = isColorOut(c.name);
-    const label = (on && out) ? `${c.name}（沽清）` : c.name;
+    const out = colorFullyOut(c.name);
     return `<span class="used-chip ${on ? 'on' : ''}${on && out ? ' sold-out-chip' : ''}"
               ${on ? `style="background:${c.hex};color:${c.text}"` : ''}>
               <span class="dot" style="background:${on ? c.hex : '#ccd4e2'}"></span>
-              ${esc(label)}
+              ${esc(c.name)}${on && out ? '（沽清）' : ''}
             </span>`;
   }).join('');
+
+  $('.session-sold', sec).textContent = state.sessionSales.cash + state.sessionSales.epay;
+  $('.qi-used-count', sec).textContent = `${state.usedThisSession.length} / 9`;
 }
 
 function renderBoard(){
   const nameSuffix = state.sessionName ? `　${state.sessionName}` : '';
   $('#boardSession').textContent = `第 ${state.sessionNo} 場${nameSuffix}`;
-  
+
   const day = getDisplayDay();
   const schedule = SCHEDULE[day];
   const sessionIdx = state.sessionNo - 1;
@@ -1719,25 +1851,26 @@ function renderBoard(){
   $('#boardSoldTotal').textContent = state.sessionSales.cash + state.sessionSales.epay;
 
   ['cash','epay'].forEach(ch => {
-    const box = $(`#page-board .board-channel[data-ch="${ch}"] .board-color-box`);
-    const cur = state.channels[ch].currentColor;
-    const soldOut = isChannelSoldOut(ch);
-    if (cur){
-      const c = COLOR_MAP[cur];
-      box.style.background = c.hex; box.style.color = c.text;
-      box.textContent = soldOut ? `${cur}（沽清）` : cur;
-      box.classList.remove('empty');
-      box.classList.toggle('sold-out', soldOut);
-    } else {
-      box.style.background = ''; box.style.color = '';
-      box.textContent = '尚未選擇'; box.classList.add('empty');
-      box.classList.remove('sold-out');
+    const grid = $(`#page-board .board-channel[data-ch="${ch}"] .board-stack-grid`);
+    const act = state.channels[ch].activeStacks;
+    if (!act.length){
+      grid.innerHTML = `<div class="board-color-box empty">尚未選擇</div>`;
+      return;
     }
+    grid.innerHTML = act.map(a => {
+      const c = COLOR_MAP[a.color];
+      const st = getStack(a.color, a.stackIndex) || { remaining:0, total:0 };
+      const out = !stackSellable(st);
+      return `<div class="board-color-box ${out ? 'sold-out' : ''}" style="background:${c.hex};color:${c.text}">
+        <span>${esc(a.color)}</span>
+        <span class="bcs-stack">第 ${a.stackIndex+1} 疊 · 剩 ${st.remaining}</span>
+      </div>`;
+    }).join('');
   });
 
   $('#boardUsedGrid').innerHTML = COLOR_LIST.map(c => {
     const on = state.usedThisSession.includes(c.name);
-    const out = on && isColorOut(c.name);
+    const out = on && colorFullyOut(c.name);
     return `<div class="board-used-cell ${on ? 'on' : ''}${out ? ' sold-out-cell' : ''}"
               ${on ? `style="background:${c.hex};color:${c.text}"` : ''}>
               <span>${esc(c.name)}</span>
@@ -1747,14 +1880,12 @@ function renderBoard(){
 
   $('#boardRemainGrid').innerHTML = COLOR_LIST.map(c => {
     const info = state.colors[c.name];
-    const isEmpty = info.remaining <= 0;
-    const out = isColorOut(c.name);
-    const stackRemain = getCurrentStackRemaining(c.name);
-    const low = !isEmpty && !out && info.remaining <= 10;
-    return `<div class="board-remain-cell ${isEmpty ? 'out' : ''} ${low ? 'low' : ''}">
+    const out = colorFullyOut(c.name);
+    const low = !out && info.remaining <= 10;
+    return `<div class="board-remain-cell ${out ? 'out' : ''} ${low ? 'low' : ''}">
               <span class="brc-dot" style="background:${c.hex}"></span>
               <span class="brc-name">${esc(c.name)}</span>
-              <span class="brc-num">${out ? '沽清' : stackRemain}</span>
+              <span class="brc-num">${out ? '沽清' : info.remaining}</span>
             </div>`;
   }).join('');
 
@@ -1771,8 +1902,8 @@ function renderBoard(){
 function renderStats(){
   const day = state.currentDay;
   const schedule = SCHEDULE[day];
-  const prices = state.sessionPrices[day];
-  
+  const prices = state.sessionPrices[day] || {};
+
   const historyMap = {};
   state.history.forEach(h => {
     if (h.day === day) historyMap[h.session] = h;
@@ -1825,7 +1956,7 @@ function renderStats(){
   $('#statsTable tbody').innerHTML = html;
 
   $$('.price-input').forEach(inp => {
-    inp.addEventListener('change', (e) => {
+    inp.addEventListener('change', () => {
       const dayVal = Number(inp.dataset.day);
       const sessionVal = Number(inp.dataset.session);
       let val = Math.max(1, Math.floor(Number(inp.value) || 20));
@@ -1836,14 +1967,17 @@ function renderStats(){
       renderStats();
     });
   });
-  
+
   const daySelect = $('#statsDaySelect');
   if (daySelect) daySelect.value = state.currentDay;
 }
 
 function renderAll(){
-  renderAdmin(); renderChannel('cash'); renderChannel('epay');
-  renderBoard(); updateRoomCardStatus();
+  renderAdmin();
+  renderChannel('cash');
+  renderChannel('epay');
+  renderBoard();
+  updateRoomCardStatus();
   if (operator === 'Hayson' || operator === 'setting') {
     renderStats();
   }
@@ -1946,6 +2080,8 @@ $('#saveSessionBtn').addEventListener('click', () => {
 });
 
 $('#adminTable').addEventListener('click', (e) => {
+  const toggle = e.target.closest('.toggle-soldout');
+  if (toggle){ toggleColorSoldOut(toggle.dataset.color); return; }
   const btn = e.target.closest('.apply-row');
   if (!btn) return;
   const tr = btn.closest('tr');
@@ -1962,23 +2098,130 @@ $('#adminTable').addEventListener('keydown', (e) => {
   applyRowChanges(tr.dataset.color);
 });
 
+/* 疊細緻設定 */
+$('#stackEditColor').addEventListener('change', () => {
+  stackEditColor = $('#stackEditColor').value;
+  renderStackEditor();
+});
+$('#addStackBtn').addEventListener('click', () => {
+  const info = state.colors[stackEditColor];
+  info.stacksDetail.push(defaultStack(TICKETS_PER_STACK));
+  syncColor(stackEditColor);
+  addLog(`「${stackEditColor}」新增一疊`);
+  persist(); renderAll();
+});
+$('#stackEditBody').addEventListener('click', async (e) => {
+  const btn = e.target.closest('.se-del');
+  if (!btn) return;
+  const tr = btn.closest('tr');
+  const idx = Number(tr.dataset.idx);
+  const info = state.colors[stackEditColor];
+  if (info.stacksDetail.length <= 1){ toast('至少要保留一疊'); return; }
+  const st = info.stacksDetail[idx];
+  if (st.remaining < st.total || st.soldOut){
+    const ok = await askConfirm('刪除此疊',
+      `<p>第 ${idx+1} 疊目前剩餘 ${st.remaining}/${st.total} 張，刪除後將無法復原。</p>`, '確定刪除');
+    if (!ok) return;
+  }
+  info.stacksDetail.splice(idx, 1);
+  ['cash','epay'].forEach(ch => {
+    state.channels[ch].activeStacks = state.channels[ch].activeStacks.filter(a => {
+      if (a.color !== stackEditColor) return true;
+      if (a.stackIndex === idx) return false;
+      if (a.stackIndex > idx) a.stackIndex -= 1;
+      return true;
+    });
+  });
+  syncColor(stackEditColor);
+  addLog(`「${stackEditColor}」刪除第 ${idx+1} 疊`);
+  persist(); renderAll();
+});
+$('#saveStacksBtn').addEventListener('click', async () => {
+  const info = state.colors[stackEditColor];
+  const rows = $$('#stackEditBody tr[data-idx]');
+  const newDetails = rows.map(tr => {
+    const total = Math.max(0, Math.floor(Number($('.se-total', tr).value) || 0));
+    let remaining = Math.max(0, Math.floor(Number($('.se-remain', tr).value) || 0));
+    remaining = Math.min(remaining, total);
+    let soldOut = $('.se-soldout', tr).checked;
+    if (remaining <= 0) soldOut = true;
+    return { total, remaining, soldOut };
+  });
+  if (!newDetails.length){ toast('至少要保留一疊'); return; }
+  const ok = await askConfirm('儲存各疊設定',
+    `<p>確定要套用「<b>${esc(stackEditColor)}</b>」的 ${newDetails.length} 疊設定嗎？</p>`, '確定儲存');
+  if (!ok) return;
+  info.stacksDetail = newDetails;
+  syncColor(stackEditColor);
+  addLog(`細緻設定「${stackEditColor}」各疊票數`);
+  persist(); renderAll();
+  toast('已儲存');
+});
+
+/* 組長即時工具 */
+$('#applySalesBtn').addEventListener('click', async () => {
+  const cash = Math.max(0, Math.floor(Number($('#fixCashSold').value) || 0));
+  const epay = Math.max(0, Math.floor(Number($('#fixEpaySold').value) || 0));
+  if (cash === state.sessionSales.cash && epay === state.sessionSales.epay){ toast('沒有變更'); return; }
+  const ok = await askConfirm('修正本場售出數',
+    `<p>現金：<b>${state.sessionSales.cash}</b> → <b>${cash}</b> 張</p>
+     <p>MPay：<b>${state.sessionSales.epay}</b> → <b>${epay}</b> 張</p>`, '確定套用');
+  if (!ok){ renderAll(); return; }
+  state.sessionSales.cash = cash;
+  state.sessionSales.epay = epay;
+  addLog(`手動修正本場售出數（現金 ${cash}、MPay ${epay}）`);
+  persist(); renderAll();
+  toast('已套用');
+});
+$('#clearUsedBtn').addEventListener('click', async () => {
+  const ok = await askConfirm('清空本場已出現顏色',
+    '<p>清空後，本場已使用過的顏色將重新可被選擇，通道目前售賣中的顏色不受影響。</p>', '確定清空');
+  if (!ok) return;
+  state.usedThisSession = [];
+  ['cash','epay'].forEach(ch => {
+    state.channels[ch].activeStacks.forEach(a => {
+      if (!state.usedThisSession.includes(a.color)) state.usedThisSession.push(a.color);
+    });
+  });
+  addLog('清空本場已出現顏色紀錄');
+  persist(); renderAll();
+  toast('已清空本場顏色紀錄');
+});
+$('#restoreAllBtn').addEventListener('click', async () => {
+  const ok = await askConfirm('全部恢復非沽清',
+    '<p>將所有顏色所有疊的沽清標記解除（剩餘票數為 0 的疊仍無法售賣）。</p>', '確定恢復');
+  if (!ok) return;
+  COLOR_LIST.forEach(c => {
+    state.colors[c.name].stacksDetail.forEach(st => {
+      if (st.remaining > 0) st.soldOut = false;
+    });
+    syncColor(c.name);
+  });
+  addLog('手動解除所有顏色的沽清標記');
+  persist(); renderAll();
+  toast('已恢復');
+});
+
+/* 下一場 */
 $('#nextSessionBtn').addEventListener('click', async () => {
-  const cashColor = state.channels.cash.currentColor;
-  const epayColor = state.channels.epay.currentColor;
-  const cashRem = cashColor ? state.colors[cashColor].remaining : 0;
-  const epayRem = epayColor ? state.colors[epayColor].remaining : 0;
+  const cashAct = state.channels.cash.activeStacks.slice();
+  const epayAct = state.channels.epay.activeStacks.slice();
   const soldCash = state.sessionSales.cash;
   const soldEpay = state.sessionSales.epay;
   const soldTotal = soldCash + soldEpay;
-  
+
+  const keepCash = cashAct.filter(a => stackSellable(getStack(a.color, a.stackIndex)));
+  const keepEpay = epayAct.filter(a => stackSellable(getStack(a.color, a.stackIndex)))
+    .filter(a => !keepCash.some(k => k.color === a.color && k.stackIndex === a.stackIndex));
+
   const keepDesc = [];
-  if (cashColor && cashRem > 0){ keepDesc.push(`現金保留「${cashColor}」`); }
-  if (epayColor && epayRem > 0 && epayColor !== cashColor){ keepDesc.push(`電子保留「${epayColor}」`); }
+  keepCash.forEach(a => keepDesc.push(`現金保留「${a.color}」第 ${a.stackIndex+1} 疊`));
+  keepEpay.forEach(a => keepDesc.push(`MPay 保留「${a.color}」第 ${a.stackIndex+1} 疊`));
 
   const ok = await askConfirm('前往下一場',
     `<p>即將結束「<b>第 ${state.sessionNo} 場</b>」。</p>
      <ul>
-       <li>本場已售出：現金 ${soldCash} 張 / Mpay ${soldEpay} 張（合計 ${soldTotal} 張）</li>
+       <li>本場已售出：現金 ${soldCash} 張 / MPay ${soldEpay} 張（合計 ${soldTotal} 張）</li>
        <li>場次編號將變為 <b>${state.sessionNo + 1}</b></li>
        <li>未用完的顏色<b>保留剩餘票數</b>繼續使用</li>
        ${keepDesc.length ? `<li>通道顏色沿用：<br>${keepDesc.map(s => '・' + s).join('<br>')}</li>` : '<li>兩通道目前沒有可沿用的顏色。</li>'}
@@ -1996,25 +2239,18 @@ $('#nextSessionBtn').addEventListener('click', async () => {
 
   state.sessionSales = { cash: 0, epay: 0 };
   state.sessionNo += 1; state.sessionName = ''; state.usedThisSession = [];
-  
+
   if (!state.sessionPasswords) state.sessionPasswords = {};
   state.sessionPasswords[state.sessionNo] = generatePassword();
 
-  /* 新場次：重置沽清標記，更新本場基線 */
-  state.channels.cash.soldOut = false;
-  state.channels.epay.soldOut = false;
-  COLOR_LIST.forEach(c => {
-    state.sessionStartRemaining[c.name] = state.colors[c.name].remaining;
+  state.channels.cash.activeStacks = keepCash.slice(0, 1);
+  state.channels.epay.activeStacks = keepEpay;
+  if (state.channels.cash.activeStacks.length === 1){
+    state.usedThisSession.push(state.channels.cash.activeStacks[0].color);
+  }
+  state.channels.epay.activeStacks.forEach(a => {
+    if (!state.usedThisSession.includes(a.color)) state.usedThisSession.push(a.color);
   });
-
-  if (cashColor && state.colors[cashColor] && state.colors[cashColor].remaining > 0){
-    state.channels.cash.currentColor = cashColor;
-    state.usedThisSession.push(cashColor);
-  } else { state.channels.cash.currentColor = null; }
-  if (epayColor && state.colors[epayColor] && state.colors[epayColor].remaining > 0 && epayColor !== cashColor){
-    state.channels.epay.currentColor = epayColor;
-    if (!state.usedThisSession.includes(epayColor)) state.usedThisSession.push(epayColor);
-  } else { state.channels.epay.currentColor = null; }
 
   addLog(`前往下一場 → 第 ${state.sessionNo} 場`);
   persist(); renderAll();
@@ -2102,16 +2338,54 @@ $('#exportLogBtn').addEventListener('click', () => {
   toast('已匯出操作日誌');
 });
 
+/* 通道事件 */
+function handleSell(ch){
+  const act = state.channels[ch].activeStacks;
+  if (!act.length){ toast('請先選擇售賣顏色'); return; }
+  if (ch === 'cash'){
+    const a = act[0];
+    sellTickets('cash', a.color, a.stackIndex, 1);
+  } else {
+    const sec = $('#page-epay');
+    const sel = $('.sell-target', sec);
+    const qtyInp = $('.sell-qty', sec);
+    const idx = Number(sel && sel.value) || 0;
+    const qty = Math.max(1, Math.floor(Number(qtyInp && qtyInp.value) || 1));
+    const a = act[idx];
+    if (!a){ toast('找不到該疊'); return; }
+    sellTickets('epay', a.color, a.stackIndex, qty);
+  }
+}
+function handleUndo(ch){
+  const act = state.channels[ch].activeStacks;
+  if (!act.length){ toast('請先選擇售賣顏色'); return; }
+  if (ch === 'cash'){
+    const a = act[0];
+    undoTickets('cash', a.color, a.stackIndex, 1);
+  } else {
+    const sec = $('#page-epay');
+    const sel = $('.sell-target', sec);
+    const qtyInp = $('.sell-qty', sec);
+    const idx = Number(sel && sel.value) || 0;
+    const qty = Math.max(1, Math.floor(Number(qtyInp && qtyInp.value) || 1));
+    const a = act[idx];
+    if (!a){ toast('找不到該疊'); return; }
+    undoTickets('epay', a.color, a.stackIndex, qty);
+  }
+}
+
 ['cash','epay'].forEach(ch => {
   const sec = $('#page-' + ch);
   if (!sec) return;
   sec.addEventListener('click', (e) => {
     if (e.target.closest('.recommend-btn')){ recommend(ch); return; }
-    if (e.target.closest('.sell-btn')){ sellTicket(ch, 1); return; }
-    if (e.target.closest('.undo-btn')){ sellTicket(ch, -1); return; }
-    const pick = e.target.closest('.color-pick');
-    if (pick && !pick.disabled){ selectColor(ch, pick.dataset.color); return; }
+    if (e.target.closest('.sell-btn')){ handleSell(ch); return; }
+    if (e.target.closest('.undo-btn')){ handleUndo(ch); return; }
     if (e.target.closest('.submit-remain')){ submitRemain(ch); return; }
+    const rm = e.target.closest('.asc-remove');
+    if (rm){ removeActiveStack(ch, Number(rm.dataset.idx)); return; }
+    const pick = e.target.closest('.color-pick');
+    if (pick && !pick.disabled){ onPickColor(ch, pick.dataset.color); return; }
   });
   sec.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('channel-remain-input')){
@@ -2160,7 +2434,7 @@ $('#exportExcelBtn').addEventListener('click', () => {
   const day = state.currentDay;
   const schedule = SCHEDULE[day];
   const dayTitle = day === 1 ? '01/11 (Sat) Day1' : '02/11 (Sat) Day2';
-  const prices = state.sessionPrices[day];
+  const prices = state.sessionPrices[day] || {};
 
   const historyMap = {};
   state.history.forEach(h => {
@@ -2256,8 +2530,8 @@ $('#loginNameInput').addEventListener('keydown', (e) => {
    初始化
    ================================================================ */
 function bootstrap(){
-  $('#page-cash').innerHTML = channelInnerHTML('現金通道');
-  $('#page-epay').innerHTML = channelInnerHTML('電子支付通道');
+  $('#page-cash').innerHTML = channelInnerHTML('cash', '現金通道');
+  $('#page-epay').innerHTML = channelInnerHTML('epay', '電子支付通道');
   if (!localStorage.getItem(STORAGE_KEY)){
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e){}
   }
