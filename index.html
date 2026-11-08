@@ -200,7 +200,7 @@ input:focus,select:focus{outline:2px solid #7EC8E3;border-color:#1B3A6B;backgrou
 .btn.danger{background:#E63946;color:#fff}
 .btn.danger:hover{background:#cf2b38}
 .btn.small{padding:7px 12px;font-size:13px}
-.btn.full{width:100%;margin-bottom:12px}
+.btn.full{width:100%;margin-bottom:10px}
 .btn-col{display:flex;flex-direction:column;gap:10px}
 .btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.3)}
 
@@ -283,6 +283,10 @@ input:focus,select:focus{outline:2px solid #7EC8E3;border-color:#1B3A6B;backgrou
 .active-stack-card .asc-name{font-size:24px;letter-spacing:2px;line-height:1.1}
 .active-stack-card .asc-stack{font-size:12px;opacity:.85;font-weight:600}
 .active-stack-card .asc-remain{font-size:14px;font-weight:800}
+.active-stack-card .asc-shared{
+  position:absolute;top:6px;left:8px;background:rgba(0,0,0,.28);color:#fff;
+  font-size:9.5px;font-weight:800;letter-spacing:1px;padding:1px 8px;border-radius:999px;
+}
 .active-stack-card .asc-remove{
   position:absolute;top:6px;right:8px;background:rgba(0,0,0,.22);color:#fff;border:none;
   border-radius:50%;width:22px;height:22px;font-size:12px;line-height:1;cursor:pointer;
@@ -330,6 +334,17 @@ input:focus,select:focus{outline:2px solid #7EC8E3;border-color:#1B3A6B;backgrou
 .color-pick:disabled{opacity:.35;cursor:not-allowed;filter:grayscale(.35)}
 .color-pick .cp-tag{font-size:10.5px;font-weight:600;color:#8a93a6}
 .color-pick.used-color{border-style:dashed}
+
+.batch-checks{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:8px}
+.batch-checkbox-label{
+  display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;
+  border:2px solid #e3e8f0;background:#fbfcfe;cursor:pointer;font-size:13px;font-weight:600;
+  transition:.15s;color:#1c2333;
+}
+.batch-checkbox-label:hover{border-color:#1B3A6B}
+.batch-checkbox-label input[type=checkbox]{width:16px;height:16px;flex:none;cursor:pointer}
+.batch-checkbox-label.already-in{opacity:.55;background:#f0f3f9;cursor:not-allowed}
+.batch-checkbox-label .cp-tag{font-size:10.5px;color:#8a93a6;font-weight:600;margin-left:auto}
 
 .used-grid{display:flex;flex-wrap:wrap;gap:8px}
 .used-chip{
@@ -935,7 +950,6 @@ function normalizeState(raw){
     if (Array.isArray(src.stacksDetail) && src.stacksDetail.length){
       details = src.stacksDetail.map(normalizeStackRaw);
     } else {
-      /* 舊資料遷移 */
       const n = Number.isFinite(src.stacks) && src.stacks > 0 ? Math.floor(src.stacks) : 1;
       const total = Number.isFinite(src.total) ? Math.max(0, Math.floor(src.total)) : n * TICKETS_PER_STACK;
       let remaining = Number.isFinite(src.remaining) ? Math.floor(src.remaining) : total;
@@ -959,11 +973,10 @@ function normalizeState(raw){
   if (Array.isArray(s.usedThisSession)) {
     out.usedThisSession = s.usedThisSession.filter(n => validNames.includes(n));
   }
-  /* 現金與電子支付均可同時並行多個顏色疊 */
+  /* 現金與 MPay 均可同時並行多個顏色疊，並允許兩通道共用同一疊 */
   out.channels.cash = normalizeChannel(s.channels && s.channels.cash, out.colors);
   out.channels.epay = normalizeChannel(s.channels && s.channels.epay, out.colors);
 
-  /* 通道已占用的疊 → 補進本場已出現顏色 */
   ['cash','epay'].forEach(ch => {
     out.channels[ch].activeStacks.forEach(a => {
       if (!out.usedThisSession.includes(a.color)) out.usedThisSession.push(a.color);
@@ -1328,6 +1341,12 @@ function checkExistingLogin(){
 
 function channelActive(ch){ return state.channels[ch].activeStacks || []; }
 
+/* 判斷某疊目前是否被另一通道同時使用（用於顯示「共用」徽章） */
+function isStackSharedWithOther(ch, colorName, stackIndex){
+  const other = ch === 'cash' ? 'epay' : 'cash';
+  return state.channels[other].activeStacks.some(a => a.color === colorName && a.stackIndex === stackIndex);
+}
+
 function getRecommendedColor(){
   const candidates = COLOR_LIST.filter(c => {
     const info = state.colors[c.name];
@@ -1370,7 +1389,8 @@ function sellTickets(ch, colorName, stackIndex, qty){
   if (st.remaining <= 0) st.soldOut = true;
   syncColor(colorName);
   const chLabel = ch === 'cash' ? '現金' : 'MPay';
-  addLog(`${chLabel} 售出「${colorName}」第 ${stackIndex+1} 疊 ${n} 張`);
+  const sharedNote = isStackSharedWithOther(ch, colorName, stackIndex) ? '（共用疊）' : '';
+  addLog(`${chLabel} 售出「${colorName}」第 ${stackIndex+1} 疊 ${n} 張${sharedNote}`);
   persist(); renderAll();
   if (st.remaining <= 0) toast(`「${colorName}」第 ${stackIndex+1} 疊已沽清`);
 }
@@ -1416,15 +1436,10 @@ async function askStackSelect(title, colorName){
   return v === null ? null : Number(v);
 }
 
+/* 允許兩通道共用同一疊，僅防止同一通道重複 */
 async function selectStack(ch, colorName, stackIndex){
-  const other = ch === 'cash' ? 'epay' : 'cash';
-  const occupied = state.channels[other].activeStacks.some(a => a.color === colorName && a.stackIndex === stackIndex);
-  if (occupied){
-    await askConfirm('此疊已被佔用', `<p>「<b>${esc(colorName)}</b>」第 ${stackIndex+1} 疊目前由另一個通道使用中，請選擇其他疊。</p>`, '知道了', true);
-    return;
-  }
   const already = state.channels[ch].activeStacks.some(a => a.color === colorName && a.stackIndex === stackIndex);
-  if (already){ toast('該疊已在售賣中'); return; }
+  if (already){ toast('該疊已在本通道售賣中'); return; }
   const st = getStack(colorName, stackIndex);
   if (!st || !stackSellable(st)){
     await askConfirm('無法選用', `<p>「<b>${esc(colorName)}</b>」第 ${stackIndex+1} 疊已沽清或沒有票。</p>`, '知道了', true);
@@ -1432,25 +1447,127 @@ async function selectStack(ch, colorName, stackIndex){
   }
   const c = COLOR_MAP[colorName];
   const isCash = ch === 'cash';
+  const shared = isStackSharedWithOther(ch, colorName, stackIndex);
   const ok = await askConfirm(
     isCash ? '新增現金售賣顏色' : '新增 MPay 售賣疊',
     `<p>${isCash ? '為現金通道加入售賣顏色：' : '為電子支付通道新增售賣疊：'}</p>
      <div class="modal-swatch" style="background:${c.hex};color:${c.text}">${esc(colorName)} · 第 ${stackIndex+1} 疊</div>
      <p>此疊剩餘 <b>${st.remaining}</b> / ${st.total} 張。</p>
-     <p class="hint">新增後會與其他售賣中的顏色疊同時並行，不會影響已有的售賣。</p>`,
+     ${shared ? '<p class="warn-text">注意：此疊目前正被另一通道共用，兩通道會共同扣除同一疊的票數。</p>' : ''}
+     <p class="hint">新增後會與其他售賣中的顏色疊同時並行，並自動延續到下一場，直到售罄才移除。</p>`,
     '確定新增');
   if (!ok) return;
 
   state.channels[ch].activeStacks.push({ color: colorName, stackIndex });
   if (!state.usedThisSession.includes(colorName)) state.usedThisSession.push(colorName);
-  addLog(`${isCash ? '現金' : 'MPay'}通道 新增售賣「${colorName}」第 ${stackIndex+1} 疊`);
+  addLog(`${isCash ? '現金' : 'MPay'}通道 新增售賣「${colorName}」第 ${stackIndex+1} 疊${shared ? '（共用）' : ''}`);
   persist(); renderAll();
+  if (shared) toast('已加入共用疊，兩通道將共用同一疊票數');
 }
 
 async function onPickColor(ch, colorName){
   const idx = await askStackSelect('選擇售賣的疊', colorName);
   if (idx === null) return;
   await selectStack(ch, colorName, idx);
+}
+
+/* ---- 批量選擇顏色（一次過選多個） ---- */
+async function batchSelectColors(ch){
+  const existing = new Set(state.channels[ch].activeStacks.map(a => a.color));
+
+  const available = COLOR_LIST.filter(c => {
+    const info = state.colors[c.name];
+    if (!info || info.remaining <= 0) return false;
+    const idx = firstSellableStackIndex(c.name);
+    if (idx < 0) return false;
+    if (existing.has(c.name)) return false;
+    return true;
+  });
+
+  if (!available.length){
+    await askConfirm('沒有可用顏色', '<p>目前沒有可加入的可售賣顏色。</p>', '知道了', true);
+    return;
+  }
+
+  const checkboxes = available.map(c => {
+    const info = state.colors[c.name];
+    return `<label class="batch-checkbox-label">
+      <input type="checkbox" class="batch-cb" data-color="${esc(c.name)}">
+      <span class="dot" style="background:${c.hex}"></span>
+      <span>${esc(c.name)}</span>
+      <span class="cp-tag">剩 ${info.remaining}</span>
+    </label>`;
+  }).join('');
+
+  const bodyHTML = `
+    <p>勾選要一次加入${ch === 'cash' ? '現金' : 'MPay'}通道的顏色（可多選）：</p>
+    <div class="batch-checks">${checkboxes}</div>
+    <p class="hint">加入後會自動並行售賣，並延續到下一場，直到該顏色售罄才移除。兩通道可共用同一疊，票數會共同扣除。</p>
+  `;
+
+  const overlay = $('#modalOverlay');
+  const btnConfirm = $('#modalConfirm');
+  const btnCancel = $('#modalCancel');
+  $('#modalTitle').textContent = '批量選擇顏色';
+  $('#modalBody').innerHTML = bodyHTML;
+  btnConfirm.textContent = '加入選中顏色';
+  btnCancel.style.display = '';
+  btnCancel.textContent = '取消';
+  overlay.classList.add('show');
+
+  const picks = await new Promise(resolve => {
+    function cleanup(){
+      overlay.classList.remove('show');
+      btnConfirm.onclick = null; btnCancel.onclick = null; overlay.onclick = null;
+      document.removeEventListener('keydown', onKey);
+    }
+    function onKey(e){
+      if (e.key === 'Escape'){ e.preventDefault(); cleanup(); resolve(null); }
+    }
+    btnConfirm.onclick = () => {
+      const picked = $$('.batch-cb', overlay).filter(cb => cb.checked).map(cb => cb.dataset.color);
+      cleanup(); resolve(picked);
+    };
+    btnCancel.onclick = () => { cleanup(); resolve(null); };
+    overlay.onclick = (e) => { if (e.target === overlay){ cleanup(); resolve(null); } };
+    document.addEventListener('keydown', onKey);
+  });
+
+  if (!picks || !picks.length) return;
+
+  let added = 0;
+  picks.forEach(colorName => {
+    if (existing.has(colorName)) return;
+    const idx = firstSellableStackIndex(colorName);
+    if (idx < 0) return;
+    state.channels[ch].activeStacks.push({ color: colorName, stackIndex: idx });
+    if (!state.usedThisSession.includes(colorName)) state.usedThisSession.push(colorName);
+    added++;
+  });
+
+  if (added > 0){
+    addLog(`${ch === 'cash' ? '現金' : 'MPay'}通道 批量新增 ${added} 個顏色`);
+    persist(); renderAll();
+    toast(`已加入 ${added} 個顏色`);
+  } else {
+    toast('沒有新增任何顏色');
+  }
+}
+
+/* ---- 清除已售罄的疊 ---- */
+function clearSoldOutStacks(ch){
+  const before = state.channels[ch].activeStacks.length;
+  state.channels[ch].activeStacks = state.channels[ch].activeStacks.filter(a => {
+    return stackSellable(getStack(a.color, a.stackIndex));
+  });
+  const removed = before - state.channels[ch].activeStacks.length;
+  if (removed > 0){
+    addLog(`${ch === 'cash' ? '現金' : 'MPay'}通道 清除 ${removed} 個已售罄的疊`);
+    persist(); renderAll();
+    toast(`已清除 ${removed} 個已售罄的疊`);
+  } else {
+    toast('目前沒有已售罄的疊');
+  }
 }
 
 function removeActiveStack(ch, idx){
@@ -1497,9 +1614,10 @@ async function submitRemain(ch){
   let val = Math.floor(Number(raw));
   val = Math.max(0, Math.min(val, st.total));
   if (val === st.remaining){ toast('沒有變更'); return; }
+  const sharedNote = isStackSharedWithOther(ch, a.color, a.stackIndex) ? '<p class="warn-text">此疊目前由兩通道共用，登記後另一通道也會同步看到新的剩餘票數。</p>' : '';
   const ok = await askConfirm('確認登記本疊剩餘票數',
     `<p>顏色：<b>${esc(a.color)}</b> · 第 ${a.stackIndex+1} 疊</p>
-     <p>本疊剩餘：<b>${st.remaining}</b> → <b>${val}</b> 張（容量 ${st.total}）</p>`,
+     <p>本疊剩餘：<b>${st.remaining}</b> → <b>${val}</b> 張（容量 ${st.total}）</p>${sharedNote}`,
     '確定登記');
   if (!ok){ renderChannel(ch); return; }
   st.remaining = val;
@@ -1558,7 +1676,6 @@ function renderAdmin(){
   renderStackEditor();
 }
 
-/* 疊數調整 */
 function resizeStacks(colorName, n){
   const info = state.colors[colorName];
   const d = info.stacksDetail;
@@ -1633,7 +1750,6 @@ async function toggleColorSoldOut(colorName){
   toast(`${colorName} 已${target ? '設為沽清' : '恢復正常'}`);
 }
 
-/* ---- 各疊細緻設定 ---- */
 let stackEditColor = COLOR_LIST[0].name;
 
 function renderStackEditor(){
@@ -1663,12 +1779,11 @@ function renderStackEditor(){
   if (totalEl) totalEl.textContent = `共 ${info.stacks} 疊，總票數 ${info.total}，剩餘 ${info.remaining} 張。修改後請按「儲存此顏色所有疊」。`;
 }
 
-/* ---- 通道頁 ---- */
 function channelInnerHTML(ch, title){
   return `
   <div class="channel-wrap">
     <div class="card span-full current-card">
-      <h2>${title} · 目前售賣</h2>
+      <h2>${title} · 目前售賣<span class="h2-tag">可並行多色 · 可與另一通道共用同一疊</span></h2>
       <div class="schedule-info"></div>
       <div class="active-stacks-display"></div>
       <div class="sell-controls-area"></div>
@@ -1680,8 +1795,10 @@ function channelInnerHTML(ch, title){
     <div class="card">
       <h2>操作</h2>
       <button class="btn primary full recommend-btn">System 推薦下一款顏色</button>
+      <button class="btn full batch-add-btn">⚡ 一次過批量選擇多個顏色</button>
+      <button class="btn full clear-soldout-btn">🧹 清除已售罄的疊</button>
       <div class="field">
-        <label>${ch === 'cash' ? '新增現金售賣顏色（可同時並行多個）' : '新增 MPay 售賣顏色 / 疊'}</label>
+        <label>${ch === 'cash' ? '單個新增現金售賣顏色（可重複點擊累加）' : '單個新增 MPay 售賣顏色 / 疊'}</label>
         <div class="color-picker"></div>
       </div>
       <div class="field">
@@ -1725,14 +1842,15 @@ function renderSellControls(ch, act){
         ${act.map((a, i) => {
           const st = getStack(a.color, a.stackIndex);
           const out = !stackSellable(st);
-          return `<option value="${i}" ${out ? 'disabled' : ''}>${esc(a.color)} · 第 ${a.stackIndex+1} 疊（剩 ${st ? st.remaining : 0}${out ? '，沽清' : ''}）</option>`;
+          const shared = isStackSharedWithOther(ch, a.color, a.stackIndex) ? '（共用）' : '';
+          return `<option value="${i}" ${out ? 'disabled' : ''}>${esc(a.color)} · 第 ${a.stackIndex+1} 疊${shared}（剩 ${st ? st.remaining : 0}${out ? '，沽清' : ''}）</option>`;
         }).join('')}
       </select>
       <input type="number" class="sell-qty" min="1" step="1" value="1">
       <button class="btn sell-btn">售出</button>
       <button class="btn undo-btn">撤回</button>
     </div>
-    <p class="hint">先選要售賣的顏色疊，再輸入售出張數。</p>`;
+    <p class="hint">先選要售賣的顏色疊，再輸入售出張數。共用疊會由兩通道共同扣除票數。</p>`;
   const firstSellableIdx = act.findIndex(a => stackSellable(getStack(a.color, a.stackIndex)));
   if (firstSellableIdx >= 0) $('.sell-target', sec).value = String(firstSellableIdx);
 }
@@ -1755,7 +1873,6 @@ function renderChannel(ch){
     }
   }
 
-  /* 目前售賣疊 */
   const disp = $('.active-stacks-display', sec);
   if (!act.length){
     disp.innerHTML = `<div class="current-color-box empty" style="grid-column:1/-1">尚未選擇售賣顏色</div>`;
@@ -1764,8 +1881,10 @@ function renderChannel(ch){
       const c = COLOR_MAP[a.color];
       const st = getStack(a.color, a.stackIndex) || { remaining:0, total:0 };
       const out = !stackSellable(st);
+      const shared = isStackSharedWithOther(ch, a.color, a.stackIndex);
       return `<div class="active-stack-card ${out ? 'sold-out' : ''}" style="background:${c.hex};color:${c.text}">
         <button class="asc-remove" data-idx="${i}" title="移除">✕</button>
+        ${shared ? '<span class="asc-shared">共用</span>' : ''}
         <div class="asc-name">${esc(a.color)}</div>
         <div class="asc-stack">第 ${a.stackIndex+1} 疊</div>
         <div class="asc-remain">剩 ${st.remaining} / ${st.total}</div>
@@ -1775,14 +1894,14 @@ function renderChannel(ch){
 
   renderSellControls(ch, act);
 
-  /* 手動登記剩餘的下拉 */
   const remainSelect = $('.remain-stack-select', sec);
   if (remainSelect){
     if (act.length){
       remainSelect.disabled = false;
       remainSelect.innerHTML = act.map((a, i) => {
         const st = getStack(a.color, a.stackIndex);
-        return `<option value="${i}">${esc(a.color)} · 第 ${a.stackIndex+1} 疊（剩 ${st ? st.remaining : 0}）</option>`;
+        const shared = isStackSharedWithOther(ch, a.color, a.stackIndex) ? '（共用）' : '';
+        return `<option value="${i}">${esc(a.color)} · 第 ${a.stackIndex+1} 疊${shared}（剩 ${st ? st.remaining : 0}）</option>`;
       }).join('');
     } else {
       remainSelect.disabled = true;
@@ -1790,7 +1909,6 @@ function renderChannel(ch){
     }
   }
 
-  /* 顏色挑選 */
   const picker = $('.color-picker', sec);
   picker.innerHTML = COLOR_LIST.map(c => {
     const info = state.colors[c.name];
@@ -1806,7 +1924,6 @@ function renderChannel(ch){
     </button>`;
   }).join('');
 
-  /* 已出現顏色 */
   const usedGrid = $('.used-chips', sec);
   usedGrid.innerHTML = COLOR_LIST.map(c => {
     const on = state.usedThisSession.includes(c.name);
@@ -1856,9 +1973,10 @@ function renderBoard(){
       const c = COLOR_MAP[a.color];
       const st = getStack(a.color, a.stackIndex) || { remaining:0, total:0 };
       const out = !stackSellable(st);
+      const shared = isStackSharedWithOther(ch, a.color, a.stackIndex);
       return `<div class="board-color-box ${out ? 'sold-out' : ''}" style="background:${c.hex};color:${c.text}">
         <span>${esc(a.color)}</span>
-        <span class="bcs-stack">第 ${a.stackIndex+1} 疊 · 剩 ${st.remaining}</span>
+        <span class="bcs-stack">第 ${a.stackIndex+1} 疊 · 剩 ${st.remaining}${shared ? ' · 共用' : ''}</span>
       </div>`;
     }).join('');
   });
@@ -2093,7 +2211,6 @@ $('#adminTable').addEventListener('keydown', (e) => {
   applyRowChanges(tr.dataset.color);
 });
 
-/* 疊細緻設定 */
 $('#stackEditColor').addEventListener('change', () => {
   stackEditColor = $('#stackEditColor').value;
   renderStackEditor();
@@ -2153,7 +2270,6 @@ $('#saveStacksBtn').addEventListener('click', async () => {
   toast('已儲存');
 });
 
-/* 組長即時工具 */
 $('#applySalesBtn').addEventListener('click', async () => {
   const cash = Math.max(0, Math.floor(Number($('#fixCashSold').value) || 0));
   const epay = Math.max(0, Math.floor(Number($('#fixEpaySold').value) || 0));
@@ -2197,7 +2313,7 @@ $('#restoreAllBtn').addEventListener('click', async () => {
   toast('已恢復');
 });
 
-/* 下一場 */
+/* 下一場：所有還有票的疊自動延續（含兩通道共用），售罄的自動移除 */
 $('#nextSessionBtn').addEventListener('click', async () => {
   const cashAct = state.channels.cash.activeStacks.slice();
   const epayAct = state.channels.epay.activeStacks.slice();
@@ -2205,14 +2321,15 @@ $('#nextSessionBtn').addEventListener('click', async () => {
   const soldEpay = state.sessionSales.epay;
   const soldTotal = soldCash + soldEpay;
 
-  /* 保留仍可售賣的疊；售完自動移除 */
   const keepCash = cashAct.filter(a => stackSellable(getStack(a.color, a.stackIndex)));
-  const keepEpay = epayAct.filter(a => stackSellable(getStack(a.color, a.stackIndex)))
-    .filter(a => !keepCash.some(k => k.color === a.color && k.stackIndex === a.stackIndex));
+  const keepEpay = epayAct.filter(a => stackSellable(getStack(a.color, a.stackIndex)));
 
   const keepDesc = [];
   keepCash.forEach(a => keepDesc.push(`現金保留「${a.color}」第 ${a.stackIndex+1} 疊`));
-  keepEpay.forEach(a => keepDesc.push(`MPay 保留「${a.color}」第 ${a.stackIndex+1} 疊`));
+  keepEpay.forEach(a => {
+    const shared = keepCash.some(k => k.color === a.color && k.stackIndex === a.stackIndex);
+    keepDesc.push(`MPay 保留「${a.color}」第 ${a.stackIndex+1} 疊${shared ? '（與現金共用）' : ''}`);
+  });
 
   const dropped = [];
   cashAct.forEach(a => { if (!keepCash.some(k => k === a)) dropped.push(`現金「${a.color}」第 ${a.stackIndex+1} 疊（已售罄）`); });
@@ -2224,6 +2341,7 @@ $('#nextSessionBtn').addEventListener('click', async () => {
        <li>本場已售出：現金 ${soldCash} 張 / MPay ${soldEpay} 張（合計 ${soldTotal} 張）</li>
        <li>場次編號將變為 <b>${state.sessionNo + 1}</b></li>
        <li>未用完的顏色疊會<b>自動延續到下一場</b>，直到售罄才移除</li>
+       <li>若兩通道共用同一疊，該疊會同時保留在兩通道中</li>
        ${keepDesc.length ? `<li>通道顏色延續：<br>${keepDesc.map(s => '・' + s).join('<br>')}</li>` : '<li>兩通道目前沒有可沿用的顏色。</li>'}
        ${dropped.length ? `<li class="warn-text">已售罄自動移除：<br>${dropped.map(s => '・' + s).join('<br>')}</li>` : ''}
      </ul>`, '確定前往下一場');
@@ -2244,7 +2362,6 @@ $('#nextSessionBtn').addEventListener('click', async () => {
   if (!state.sessionPasswords) state.sessionPasswords = {};
   state.sessionPasswords[state.sessionNo] = generatePassword();
 
-  /* 現金與 MPay 都可保留多個並行疊 */
   state.channels.cash.activeStacks = keepCash;
   state.channels.epay.activeStacks = keepEpay;
   state.channels.cash.activeStacks.forEach(a => {
@@ -2381,6 +2498,8 @@ function handleUndo(ch){
   if (!sec) return;
   sec.addEventListener('click', (e) => {
     if (e.target.closest('.recommend-btn')){ recommend(ch); return; }
+    if (e.target.closest('.batch-add-btn')){ batchSelectColors(ch); return; }
+    if (e.target.closest('.clear-soldout-btn')){ clearSoldOutStacks(ch); return; }
     if (e.target.closest('.sell-btn')){ handleSell(ch); return; }
     if (e.target.closest('.undo-btn')){ handleUndo(ch); return; }
     if (e.target.closest('.submit-remain')){ submitRemain(ch); return; }
